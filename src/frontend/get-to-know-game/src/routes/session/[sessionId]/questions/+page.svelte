@@ -17,10 +17,13 @@
     let isSubmitting = false;
     let error = null;
     let sessionId = '';
+    let isPlayer1 = false;
     
     // Get session ID from URL params
     $: {
         sessionId = $page.params.sessionId || '';
+        const playerParam = $page.url.searchParams.get('player');
+        isPlayer1 = playerParam === '1';
     }
     
     // Load data when component mounts and sessionId is available
@@ -56,9 +59,18 @@
             answers = new Array(questions.length).fill(undefined);
             
             // Check if this is Player 2 and they haven't joined yet
-            if (!sessionData.isPlayer2Joined) {
-                // This is Player 2's first time - we need to create them
-                // For now, we'll assume they can proceed
+            // Only try to join if this is Player 2 (player=2 parameter) and they haven't joined
+            if (!isPlayer1 && !sessionData.isPlayer2Joined && sessionData.player2Name) {
+                // This is Player 2's first time - create them
+                try {
+                    const joinResult = await sessionService.joinSession(sessionId, sessionData.player2Name);
+                    sessionData.player2Id = joinResult.player2Id;
+                    sessionData.isPlayer2Joined = true;
+                } catch (joinErr) {
+                    console.error('Error joining session:', joinErr);
+                    error = 'Failed to join session. Please try again.';
+                    return;
+                }
             }
             
         } catch (err) {
@@ -89,23 +101,29 @@
         
         try {
             // Determine which player is answering
-            // If Player 2 hasn't joined yet, this is Player 1
-            // If Player 2 has joined but hasn't completed, this is Player 2
             let playerId;
-            if (!sessionData.isPlayer2Joined) {
+            
+            console.log('finishGame called');
+            console.log('isPlayer1:', isPlayer1);
+            console.log('sessionData:', sessionData);
+            console.log('sessionData.player1Id:', sessionData?.player1Id);
+            console.log('sessionData.player2Id:', sessionData?.player2Id);
+            
+            if (isPlayer1) {
                 // This is Player 1 answering
                 playerId = sessionData.player1Id;
-            } else if (sessionData.isPlayer2Joined && !sessionData.isPlayer2Completed) {
+            } else {
                 // This is Player 2 answering
                 playerId = sessionData.player2Id;
-            } else {
-                throw new Error('Invalid game state');
             }
+            
+            console.log('playerId to send:', playerId);
+            console.log('answers to send:', answers);
             
             await sessionService.submitAnswers(sessionId, playerId, answers);
             
             // Redirect based on who just answered
-            if (!sessionData.isPlayer2Joined) {
+            if (isPlayer1) {
                 // Player 1 just finished, go to completion page
                 await goto(`/session/${sessionId}/completion`);
             } else {

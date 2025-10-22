@@ -25,5 +25,8 @@ namespace GetToKnowGame.Models
 
         [BsonElement("compatibilityScore")]
         public int? CompatibilityScore { get; set; }
+
+        [BsonElement("player2Name")]
+        public string? Player2Name { get; set; }
     }
 }

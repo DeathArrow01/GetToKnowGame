@@ -23,7 +23,7 @@
             console.log('Session creation result:', result);
             console.log('Session ID:', result.sessionId);
             // Redirect to questions page for Player 1 to answer
-            await goto(`/session/${result.sessionId}/questions`);
+            await goto(`/session/${result.sessionId}/questions?player=1`);
         } catch (err) {
             console.error('Session creation error:', err);
             error = err.message || 'Failed to create session';

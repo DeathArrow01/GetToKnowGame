@@ -19,6 +19,9 @@ namespace GetToKnowGame.Repositories
 
         public virtual async Task<T?> GetByIdAsync(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return null;
+                
             var filter = Builders<T>.Filter.Eq("_id", id);
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }

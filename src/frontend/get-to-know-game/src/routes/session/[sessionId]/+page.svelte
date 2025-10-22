@@ -53,7 +53,7 @@
     }
     
     async function startGame() {
-        await goto(`/session/${sessionId}/questions`);
+        await goto(`/session/${sessionId}/questions?player=2`);
     }
 </script>
 

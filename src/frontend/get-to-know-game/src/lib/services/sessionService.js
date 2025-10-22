@@ -12,6 +12,12 @@ export const sessionService = {
         return apiService.get(`/sessions/${sessionId}`);
     },
 
+    async joinSession(sessionId, player2Name) {
+        return apiService.post(`/sessions/${sessionId}/join`, {
+            player2Name
+        });
+    },
+
     async submitAnswers(sessionId, playerId, answers) {
         return apiService.put(`/sessions/${sessionId}/answers`, {
             playerId,
