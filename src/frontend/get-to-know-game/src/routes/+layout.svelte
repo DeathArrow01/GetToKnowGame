@@ -2,7 +2,7 @@
     import '../app.css';
 </script>
 
-<main>
+<main class="gradient-bg">
     <slot />
 </main>
 

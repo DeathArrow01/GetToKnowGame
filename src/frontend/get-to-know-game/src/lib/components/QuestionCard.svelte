@@ -6,7 +6,11 @@
     
     const dispatch = createEventDispatcher();
     
-    const responseTypes = ['Yay!', 'Nay!', "I don't care!"];
+    const responseTypes = [
+        { text: 'Yay!', emoji: '😍' },
+        { text: 'Nay!', emoji: '😒' },
+        { text: "I don't care!", emoji: '🤷' }
+    ];
     
     function selectAnswer(answer) {
         selectedAnswer = answer;
@@ -14,32 +18,38 @@
     }
     
     function getButtonClass(answer) {
-        const baseClass = 'btn btn-lg w-full mb-2';
+        const baseClass = 'btn-secondary-modern p-6 text-left transition-all duration-300 w-full';
         if (selectedAnswer === answer) {
-            return `${baseClass} btn-primary`;
+            return `${baseClass} bg-gradient-purple border-purple-500 text-white`;
         }
-        return `${baseClass} btn-outline`;
+        return baseClass;
     }
 </script>
 
-<div class="card bg-base-100 shadow-xl max-w-2xl mx-auto">
-    <div class="card-body text-center">
-        <h2 class="card-title justify-center text-2xl font-bold text-primary mb-4">
+<div class="card-modern p-8 max-w-2xl mx-auto">
+    <div class="text-center mb-8">
+        <div class="inline-block bg-gradient-purple rounded-full p-3 mb-4">
+            <span class="text-2xl">❓</span>
+        </div>
+        <h2 class="text-lg font-semibold text-secondary mb-2">
             {question.section}
         </h2>
-        <p class="text-lg mb-8">
+        <h3 class="text-3xl font-bold text-primary">
             {question.questionText}
-        </p>
-        
-        <div class="space-y-3">
-            {#each responseTypes as response}
-                <button 
-                    class={getButtonClass(response)}
-                    on:click={() => selectAnswer(response)}
-                >
-                    {response}
-                </button>
-            {/each}
-        </div>
+        </h3>
+    </div>
+    
+    <div class="grid gap-4">
+        {#each responseTypes as response}
+            <button 
+                class={getButtonClass(response.text)}
+                on:click={() => selectAnswer(response.text)}
+            >
+                <div class="flex items-center">
+                    <span class="text-2xl mr-4">{response.emoji}</span>
+                    <span class="text-xl font-semibold">{response.text}</span>
+                </div>
+            </button>
+        {/each}
     </div>
 </div>

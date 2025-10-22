@@ -3,15 +3,15 @@
     export let onRetry = null;
 </script>
 
-<div class="alert alert-error max-w-2xl mx-auto">
-    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+<div class="alert-modern alert-error max-w-2xl mx-auto">
+    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
     </svg>
-    <div>
-        <h3 class="font-bold">Error!</h3>
-        <div class="text-xs">{message}</div>
+    <div class="flex-1">
+        <h3 class="font-bold text-lg">Error!</h3>
+        <div class="text-sm text-secondary">{message}</div>
     </div>
     {#if onRetry}
-        <button class="btn btn-sm btn-outline" on:click={onRetry}>Retry</button>
+        <button class="btn-secondary-modern px-4 py-2 text-sm" on:click={onRetry}>Retry</button>
     {/if}
 </div>

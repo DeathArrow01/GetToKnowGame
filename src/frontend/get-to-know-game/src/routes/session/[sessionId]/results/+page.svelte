@@ -107,125 +107,138 @@
     <title>Results - Get to Know Game</title>
 </svelte:head>
 
-<div class="min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10">
+<div class="min-h-screen gradient-bg">
     <div class="container mx-auto px-4 py-8">
-        <div class="max-w-4xl mx-auto">
+        <div class="max-w-6xl mx-auto">
             {#if isLoading}
-                <LoadingSpinner text="Loading your results..." />
+                <div class="text-center py-20">
+                    <div class="loading-modern mx-auto mb-4"></div>
+                    <p class="text-secondary text-lg">Loading your results...</p>
+                </div>
             {:else if error}
-                <ErrorMessage message={error} />
+                <div class="alert-modern alert-error max-w-2xl mx-auto">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>{error}</span>
+                </div>
             {:else if !sessionData?.isGameComplete}
-                <div class="text-center">
-                    <div class="text-6xl mb-4">⏳</div>
-                    <h1 class="text-3xl font-bold text-primary mb-4">
+                <div class="text-center py-20">
+                    <div class="w-24 h-24 bg-gradient-purple rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-5xl">⏳</span>
+                    </div>
+                    <h1 class="text-4xl font-bold text-gradient mb-6">
                         Results Not Ready Yet
                     </h1>
-                    <p class="text-lg text-base-content/80 mb-8">
+                    <p class="text-xl text-secondary mb-8 max-w-2xl mx-auto">
                         {#if !sessionData?.isPlayer2Joined}
-                            Waiting for {sessionData?.player2Name} to join the game...
+                            Waiting for <span class="font-bold text-primary">{sessionData?.player2Name}</span> to join the game...
                         {:else if !sessionData?.isPlayer2Completed}
-                            Waiting for {sessionData?.player2Name} to finish answering...
+                            Waiting for <span class="font-bold text-primary">{sessionData?.player2Name}</span> to finish answering...
                         {:else}
                             Calculating your compatibility score...
                         {/if}
                     </p>
                     <button 
-                        class="btn btn-primary"
+                        class="btn-primary-modern px-8 py-3"
                         on:click={() => window.location.reload()}
                     >
-                        Check Again
+                        Check Again →
                     </button>
                 </div>
             {:else}
                 <!-- Results Header -->
-                <div class="text-center mb-12">
-                    <div class="text-8xl mb-4">{emoji}</div>
-                    <h1 class="text-5xl font-bold text-primary mb-4">
+                <div class="text-center mb-16">
+                    <div class="text-9xl mb-6">{emoji}</div>
+                    <h1 class="text-6xl font-bold text-gradient mb-6">
                         {compatibilityScore}% Compatible!
                     </h1>
-                    <p class="text-xl text-base-content/80">
-                        {sessionData.player1Name} and {sessionData.player2Name}
+                    <p class="text-2xl text-secondary">
+                        <span class="font-bold text-primary">{sessionData.player1Name}</span> and <span class="font-bold text-primary">{sessionData.player2Name}</span>
                     </p>
                 </div>
                 
                 <!-- Compatibility Score Card -->
-                <div class="card bg-base-100 shadow-2xl mb-8">
-                    <div class="card-body text-center p-8">
-                        <div class="radial-progress text-6xl font-bold text-primary" 
-                             style="--value: {compatibilityScore}; --size: 12rem;">
+                <div class="card-modern p-12 mb-12 text-center">
+                    <div class="relative inline-block mb-8">
+                        <div class="w-48 h-48 rounded-full bg-gradient-purple flex items-center justify-center text-6xl font-bold text-white shadow-2xl">
                             {compatibilityScore}%
                         </div>
-                        <h2 class="card-title text-2xl justify-center mt-4">
-                            Compatibility Score
-                        </h2>
-                        <p class="text-base-content/70">
-                            Based on matching "Yay!" and "I don't care!" answers
-                        </p>
+                        <div class="absolute -top-2 -right-2 w-16 h-16 bg-gradient-purple rounded-full flex items-center justify-center">
+                            <span class="text-2xl">{emoji}</span>
+                        </div>
                     </div>
+                    <h2 class="text-3xl font-bold text-primary mb-4">
+                        Compatibility Score
+                    </h2>
+                    <p class="text-lg text-secondary max-w-2xl mx-auto">
+                        Based on matching "Yay!" and "I don't care!" answers from both players
+                    </p>
                 </div>
                 
                 <!-- Shared Answers -->
                 {#if sharedAnswers.length > 0}
-                    <div class="mb-8">
-                        <h2 class="text-3xl font-bold text-center mb-8">
+                    <div class="mb-12">
+                        <h2 class="text-4xl font-bold text-center mb-12 text-gradient">
                             What You Both Agree On
                         </h2>
                         
-                        {#each sharedAnswers as { section, items }}
-                            <div class="card bg-base-100 shadow-xl mb-6">
-                                <div class="card-header bg-primary/10 p-4">
-                                    <h3 class="card-title text-xl text-primary">
-                                        {section}
-                                    </h3>
-                                </div>
-                                <div class="card-body p-6">
-                                    <div class="space-y-3">
-                                        {#each items as item}
-                                            <div class="flex items-center space-x-3 p-3 bg-base-200 rounded-lg">
-                                                <div class="badge badge-primary badge-lg">
-                                                    {item.response}
+                        <div class="grid gap-8">
+                            {#each sharedAnswers as { section, items }}
+                                <div class="card-modern overflow-hidden">
+                                    <div class="bg-gradient-purple p-6">
+                                        <h3 class="text-2xl font-bold text-white flex items-center">
+                                            <span class="text-3xl mr-3">🎯</span>
+                                            {section}
+                                        </h3>
+                                    </div>
+                                    <div class="p-8">
+                                        <div class="grid gap-4">
+                                            {#each items as item}
+                                                <div class="flex items-center space-x-4 p-4 bg-secondary-bg rounded-lg border border-border-color">
+                                                    <div class="badge-modern">
+                                                        {item.response}
+                                                    </div>
+                                                    <span class="text-lg text-primary font-medium">
+                                                        {item.question.questionText}
+                                                    </span>
                                                 </div>
-                                                <span class="text-lg">
-                                                    {item.question.questionText}
-                                                </span>
-                                            </div>
-                                        {/each}
+                                            {/each}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {/each}
+                            {/each}
+                        </div>
                     </div>
                 {:else}
-                    <div class="card bg-base-100 shadow-xl mb-8">
-                        <div class="card-body text-center p-8">
-                            <div class="text-4xl mb-4">🤷‍♀️</div>
-                            <h3 class="text-xl font-bold mb-2">
-                                No Shared Preferences
-                            </h3>
-                            <p class="text-base-content/70">
-                                You didn't match on any "Yay!" or "I don't care!" answers, 
-                                but that's okay! Opposites can attract too.
-                            </p>
+                    <div class="card-modern p-12 mb-12 text-center">
+                        <div class="w-24 h-24 bg-gradient-purple rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span class="text-4xl">🤷‍♀️</span>
                         </div>
+                        <h3 class="text-3xl font-bold text-primary mb-4">
+                            No Shared Preferences
+                        </h3>
+                        <p class="text-lg text-secondary max-w-2xl mx-auto">
+                            You didn't match on any "Yay!" or "I don't care!" answers, 
+                            but that's okay! Opposites can attract too. 💕
+                        </p>
                     </div>
                 {/if}
                 
                 <!-- Action Buttons -->
-                <div class="text-center">
-                    <div class="btn-group">
-                        <button 
-                            class="btn btn-primary"
-                            on:click={() => window.location.href = '/'}
-                        >
-                            Play Again
-                        </button>
-                        <button 
-                            class="btn btn-outline"
-                            on:click={() => window.location.reload()}
-                        >
-                            Refresh Results
-                        </button>
-                    </div>
+                <div class="text-center space-x-4">
+                    <button 
+                        class="btn-primary-modern px-8 py-4 text-lg"
+                        on:click={() => window.location.href = '/'}
+                    >
+                        Play Again →
+                    </button>
+                    <button 
+                        class="btn-secondary-modern px-8 py-4 text-lg"
+                        on:click={() => window.location.reload()}
+                    >
+                        Refresh Results
+                    </button>
                 </div>
             {/if}
         </div>

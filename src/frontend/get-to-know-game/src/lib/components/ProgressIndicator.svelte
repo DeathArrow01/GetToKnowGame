@@ -6,18 +6,18 @@
 </script>
 
 <div class="w-full max-w-2xl mx-auto mb-8">
-    <div class="flex justify-between items-center mb-2">
-        <span class="text-sm font-medium text-base-content">
+    <div class="flex justify-between items-center mb-4">
+        <span class="text-lg font-semibold text-primary">
             Question {currentQuestion} of {totalQuestions}
         </span>
-        <span class="text-sm font-medium text-base-content">
-            {Math.round(progress)}%
-        </span>
+        <div class="badge-modern">
+            {Math.round(progress)}% Complete
+        </div>
     </div>
     
-    <div class="w-full bg-base-200 rounded-full h-2">
+    <div class="progress-modern">
         <div 
-            class="bg-primary h-2 rounded-full transition-all duration-300 ease-out"
+            class="progress-fill"
             style="width: {progress}%"
         ></div>
     </div>

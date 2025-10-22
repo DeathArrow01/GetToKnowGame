@@ -61,74 +61,88 @@
     <title>Welcome - Get to Know Game</title>
 </svelte:head>
 
-<div class="min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10">
+<div class="min-h-screen gradient-bg">
     <div class="container mx-auto px-4 py-8">
-        <div class="max-w-2xl mx-auto">
+        <div class="max-w-4xl mx-auto">
             {#if isLoading}
-                <LoadingSpinner text="Loading game session..." />
+                <div class="text-center py-20">
+                    <div class="loading-modern mx-auto mb-4"></div>
+                    <p class="text-secondary text-lg">Loading game session...</p>
+                </div>
             {:else if error}
-                <ErrorMessage message={error} />
+                <div class="alert-modern alert-error max-w-2xl mx-auto">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>{error}</span>
+                </div>
             {:else if sessionData}
                 <!-- Welcome Message -->
-                <div class="text-center mb-8">
-                    <div class="text-6xl mb-4">👋</div>
-                    <h1 class="text-4xl font-bold text-primary mb-4">
+                <div class="text-center mb-12">
+                    <div class="w-20 h-20 bg-gradient-purple rounded-full flex items-center justify-center mx-auto mb-6">
+                        <span class="text-4xl">👋</span>
+                    </div>
+                    <h1 class="text-5xl font-bold text-gradient mb-6">
                         Hi there!
                     </h1>
-                    <p class="text-xl text-base-content/80">
-                        <span class="font-bold text-secondary">{sessionData.player1Name}</span> has started a game for you.
+                    <p class="text-xl text-secondary max-w-2xl mx-auto">
+                        <span class="font-bold text-primary">{sessionData.player1Name}</span> has started a compatibility game for you.
                     </p>
                 </div>
                 
                 <!-- Welcome Card -->
-                <div class="card bg-base-100 shadow-2xl">
-                    <div class="card-body p-8 text-center">
-                        <h2 class="card-title text-2xl mb-6 justify-center">
+                <div class="card-modern p-8 mb-8">
+                    <div class="text-center">
+                        <h2 class="text-3xl font-bold text-primary mb-6">
                             Ready to Play?
                         </h2>
                         
-                        <p class="text-lg mb-8">
-                            You'll answer the same questions as {sessionData.player1Name} to discover how compatible you are!
+                        <p class="text-lg text-secondary mb-8 max-w-2xl mx-auto">
+                            You'll answer the same questions as <span class="font-bold text-primary">{sessionData.player1Name}</span> to discover how compatible you are!
                         </p>
                         
-                        <div class="space-y-4 mb-8">
-                            <div class="flex items-center justify-center space-x-3">
-                                <div class="badge badge-primary badge-lg">1</div>
-                                <span>Answer questions about your preferences</span>
+                        <div class="grid md:grid-cols-3 gap-6 mb-8">
+                            <div class="flex flex-col items-center space-y-3">
+                                <div class="w-12 h-12 bg-gradient-purple rounded-full flex items-center justify-center">
+                                    <span class="text-xl font-bold">1</span>
+                                </div>
+                                <span class="text-center text-secondary">Answer questions about your preferences</span>
                             </div>
-                            <div class="flex items-center justify-center space-x-3">
-                                <div class="badge badge-primary badge-lg">2</div>
-                                <span>Compare your answers with {sessionData.player1Name}</span>
+                            <div class="flex flex-col items-center space-y-3">
+                                <div class="w-12 h-12 bg-gradient-purple rounded-full flex items-center justify-center">
+                                    <span class="text-xl font-bold">2</span>
+                                </div>
+                                <span class="text-center text-secondary">Compare your answers with {sessionData.player1Name}</span>
                             </div>
-                            <div class="flex items-center justify-center space-x-3">
-                                <div class="badge badge-primary badge-lg">3</div>
-                                <span>See your compatibility score!</span>
+                            <div class="flex flex-col items-center space-y-3">
+                                <div class="w-12 h-12 bg-gradient-purple rounded-full flex items-center justify-center">
+                                    <span class="text-xl font-bold">3</span>
+                                </div>
+                                <span class="text-center text-secondary">See your compatibility score!</span>
                             </div>
                         </div>
                         
-                        <div class="card-actions justify-center">
+                        <div class="text-center">
                             <button 
-                                class="btn btn-primary btn-lg px-12"
+                                class="btn-primary-modern px-12 py-4 text-lg"
                                 on:click={startGame}
                             >
-                                Start Answering
+                                Start Answering →
                             </button>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Game Info -->
-                <div class="mt-8">
-                    <div class="alert alert-info">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <div>
-                            <h3 class="font-bold">Game Rules</h3>
-                            <div class="text-xs">
-                                Answer all questions honestly. You can choose "Yay!", "Nay!", or "I don't care!" for each question. 
-                                Your compatibility score will be based on matching "Yay!" and "I don't care!" answers.
-                            </div>
+                <div class="alert-modern alert-info max-w-2xl mx-auto">
+                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div>
+                        <h3 class="font-bold text-lg mb-2">Game Rules</h3>
+                        <div class="text-sm text-secondary">
+                            Answer all questions honestly. You can choose "Yay!", "Nay!", or "I don't care!" for each question. 
+                            Your compatibility score will be based on matching "Yay!" and "I don't care!" answers.
                         </div>
                     </div>
                 </div>

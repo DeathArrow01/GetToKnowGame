@@ -4,8 +4,8 @@
 </script>
 
 <div class="flex flex-col items-center justify-center p-8">
-    <span class="loading loading-spinner loading-{size} text-primary"></span>
+    <div class="loading-modern"></div>
     {#if text}
-        <p class="mt-4 text-base-content/70">{text}</p>
+        <p class="mt-4 text-secondary">{text}</p>
     {/if}
 </div>
