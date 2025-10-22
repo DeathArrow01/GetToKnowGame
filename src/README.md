@@ -183,6 +183,23 @@ The MongoDB container is configured with:
 - Database: `GetToKnowGame`
 - Persistent volume for data
 
+## Start app:
+	
+	### Start database:
+	$ cd src
+	$ docker-compose up -d
+	
+	### Start Backend: 
+	$ cd backend && dotnet run --project GetToKnowGame
+	
+	### Start Frontend: 
+	$ cd frontend/get-to-know-game && npm install && npm run dev
+	
+### App is running at  http://localhost:5173 and https://localhost:7169
+
+### Swagger documentation is accesible at: https://localhost:7169/swagger
+
+
 ## License
 
 This project is for educational purposes.
