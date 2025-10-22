@@ -1,0 +1,81 @@
+PROMPT1:
+
+Ask me one question at a time so we can develop a thorough, step-by-step spec for this idea. 
+Each question should build on my previous answers, and our end goal is to have a detailed specification I can hand off to a developer. 
+Let’s do this iteratively and dig into every relevant detail. Remember, only one question at a time.
+
+Here’s the idea:
+
+<IDEA>
+We are building a 2-player web game called ‘Get to Know Game.
+
+Get to know game:
+Game is targeted to high school kids.
+Game is for 2 players. When a new player starts, he will input each player's name, starting with his, he will create a session and he will answer a set of predefined questions about what he/she likes or dislikes. Questions can be about music, TV Shows, lifesteyle choices,
+web apps, mobile apps, food, fashion, celebrities, electronic games, books, sports, social and real life games, traveling, hobbies  and will be arranged in sections.
+
+Example:
+
+Section: Things to eat
+Question Pizza Diavola:
+Answers: Yay! Nay! I don't care!
+
+After 1st person finishes, will share the session link with the other player.
+
+The second player will answer the questions.
+
+After that, when someone will access the link to the session, he will see a computed compatibility score, from 0% to 100% and the questions where both responded Yay! are shown and also the questions where both responded I don't care!
+Questions where some of the two players responded Nay! are not shown.
+
+⚙️ Flow Overview
+
+Player 1 creates a session
+
+Inputs both players’ names.
+
+Answers a set of questions.
+
+Backend stores session in memory (e.g. a dictionary keyed by sessionId).
+
+Gets a shareable link: /session/{sessionId}.
+
+Player 2 opens the link
+
+Sees Player 1’s name and answers the same questions.
+
+Submits answers — backend computes compatibility score.
+
+Result page
+
+Shows:
+
+Compatibility score (0–100%)
+
+List of shared “Yay” items
+
+List of shared “I don’t care” items
+
+Hides all “Nay” answers.
+
+compatibility = 
+  (number of same answers that are Yay or I don’t care) 
+  / total number of questions * 100
+
+Display it as a big number + emoji:
+
+❤️ 80–100%
+
+🙂 50–79%
+
+😬 20–49%
+
+💀 <20%
+
+Frontend uses SvelteKit + Tailwind + DaisyUI/Flowbite; backend uses .NET WebAPI with controllers/services/repositories and MongoDB for persistence.
+Also we should install MongoDB locally in a docker container.
+</IDEA>
+
+PROMPT2:
+
+Now that we’ve wrapped up the brainstorming process, can you compile our findings into a comprehensive, developer-ready specification? 
+Include all relevant requirements, architecture choices, data handling details, error handling strategies, and a testing plan so a developer can immediately begin implementation.
