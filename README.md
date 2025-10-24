@@ -13,11 +13,12 @@ A 2-player web game that helps high school students discover shared interests an
 ## Tech Stack
 
 ### Backend
-- .NET 8 WebAPI
+- **Primary**: .NET 8 WebAPI
+- **Alternative**: Go with Fiber framework (optional)
 - MongoDB with official driver
 - Repository pattern for data access
 - RESTful API design
-- xUnit testing framework
+- xUnit testing framework (for .NET)
 - Solution structure with separate test project
 
 ### Frontend
@@ -35,14 +36,20 @@ A 2-player web game that helps high school students discover shared interests an
 ```
 src/
 ├── backend/
-│   ├── GetToKnowGame.sln              # Solution file
-│   ├── GetToKnowGame/                 # Main API project
+│   ├── GetToKnowGame.sln              # .NET Solution file
+│   ├── GetToKnowGame/                 # .NET API project
 │   │   ├── Controllers/               # API controllers
 │   │   ├── Models/                    # Data models
 │   │   ├── Repositories/              # Data access layer
 │   │   ├── Services/                  # Business logic
 │   │   └── Data/                      # Database context
-│   └── GetToKnowGame.Tests/           # Unit and integration tests
+│   ├── GetToKnowGame.Tests/           # .NET Unit and integration tests
+│   └── get-to-know-game-go/           # Go backend (optional)
+│       ├── handlers/                  # HTTP handlers
+│       ├── models/                    # Data models
+│       ├── repositories/              # Data access layer
+│       ├── services/                  # Business logic
+│       └── main.go                    # Application entry point
 ├── frontend/
 │   └── get-to-know-game/              # SvelteKit frontend
 │       ├── src/
@@ -59,11 +66,16 @@ src/
 ## Getting Started
 
 ### Prerequisites
-- .NET 8 SDK
+- .NET 8 SDK (for .NET backend)
+- Go 1.21+ (for Go backend - optional)
 - Node.js (for frontend development)
 - Docker Desktop (for MongoDB)
 
 ### Backend Setup
+
+You can choose between two backend implementations:
+
+#### Option 1: .NET Backend (Primary)
 
 1. Navigate to the backend directory:
    ```bash
@@ -80,7 +92,7 @@ src/
    docker-compose up -d
    ```
 
-4. Run the backend:
+4. Run the .NET backend:
    ```bash
    dotnet run --project GetToKnowGame
    ```
@@ -90,7 +102,33 @@ src/
    dotnet test
    ```
 
-The API will be available at `https://localhost:5000` (or `http://localhost:5000`)
+The .NET API will be available at `https://localhost:5000` (or `http://localhost:5000`)
+
+#### Option 2: Go Backend (Alternative)
+
+1. Navigate to the Go backend directory:
+   ```bash
+   cd backend/get-to-know-game-go
+   ```
+
+2. Install dependencies:
+   ```bash
+   go mod tidy
+   ```
+
+3. Start MongoDB using Docker:
+   ```bash
+   docker-compose up -d
+   ```
+
+4. Run the Go backend:
+   ```bash
+   go run main.go
+   # or use the pre-built executable:
+   # ./get-to-know-game-go.exe
+   ```
+
+The Go API will be available at `http://localhost:5012`
 
 ### Frontend Setup
 
@@ -183,24 +221,28 @@ The MongoDB container is configured with:
 - Database: `GetToKnowGame`
 - Persistent volume for data
 
-## Start app:
+## Quick Start:
 	
 	### Start database:
 	$ cd src
 	$ docker-compose up -d
 	
-	### Start .NET Backend: 
-	$ cd backend && dotnet run --project GetToKnowGame
+	### Choose one backend option:
 	
-	### Start Go Backend
+	#### Option 1: Start .NET Backend (Primary): 
+	$ cd backend && dotnet run --project GetToKnowGame
+	# App runs at: https://localhost:7169
+	# Swagger docs: https://localhost:7169/swagger
+	
+	#### Option 2: Start Go Backend (Alternative):
 	$ cd backend/get-to-know-game-go && .\get-to-know-game-go.exe
+	# App runs at: http://localhost:5012
 	
 	### Start Frontend: 
 	$ cd frontend/get-to-know-game && npm install && npm run dev
+	# Frontend runs at: http://localhost:5173
 	
-### App is running at  http://localhost:5173 and https://localhost:7169
-
-### Swagger documentation is accesible at: https://localhost:7169/swagger
+### Note: Both backends provide the same API endpoints and functionality. Choose the one you prefer!
 
 
 ## License
