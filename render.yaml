@@ -15,7 +15,7 @@ services:
   - type: web
     name: get-to-know-backend
     env: docker
-    dockerfilePath: ./backend/get-to-know-game-go/Dockerfile
+    dockerfilePath: ./src/backend/get-to-know-game-go/Dockerfile
     plan: free
     envVars:
       - key: MONGODB_URI
@@ -33,7 +33,7 @@ services:
   - type: web
     name: get-to-know-frontend
     env: docker
-    dockerfilePath: ./frontend/get-to-know-game/Dockerfile
+    dockerfilePath: ./src/frontend/get-to-know-game/Dockerfile
     plan: free
     envVars:
       - key: VITE_API_URL
