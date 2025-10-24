@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🐳 Testing Docker setup for Railway deployment..."
+echo "🐳 Testing Docker setup for Render deployment..."
 
 # Test if Docker is running
 if ! docker info > /dev/null 2>&1; then
@@ -33,7 +33,7 @@ fi
 # Test docker-compose
 echo "🔨 Testing docker-compose..."
 cd ../..
-if docker-compose -f docker-compose.railway.yml config > /dev/null; then
+if docker-compose config > /dev/null; then
     echo "✅ Docker Compose configuration is valid"
 else
     echo "❌ Docker Compose configuration is invalid"
@@ -41,10 +41,10 @@ else
 fi
 
 echo ""
-echo "🎉 All Docker tests passed! Your app is ready for Railway deployment."
+echo "🎉 All Docker tests passed! Your app is ready for Render deployment."
 echo ""
 echo "Next steps:"
 echo "1. Push your code to GitHub"
-echo "2. Go to railway.app and create a new project"
+echo "2. Go to render.com and create a new Blueprint"
 echo "3. Deploy from your GitHub repository"
-echo "4. Set the environment variables as described in RAILWAY_DEPLOYMENT.md"
+echo "4. Set the environment variables as described in RENDER_DEPLOYMENT.md"

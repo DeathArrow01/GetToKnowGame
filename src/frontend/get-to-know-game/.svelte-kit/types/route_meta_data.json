@@ -1,0 +1,7 @@
+{
+	"/": [],
+	"/session/[sessionId]": [],
+	"/session/[sessionId]/completion": [],
+	"/session/[sessionId]/questions": [],
+	"/session/[sessionId]/results": []
+}

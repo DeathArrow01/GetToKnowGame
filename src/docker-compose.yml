@@ -9,6 +9,35 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
+    restart: unless-stopped
+
+  backend-go:
+    build:
+      context: ./backend/get-to-know-game-go
+      dockerfile: Dockerfile
+    container_name: get-to-know-backend-go
+    ports:
+      - "5012:5012"
+    environment:
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/GetToKnowGame?authSource=admin
+      - PORT=5012
+      - FIBER_ENV=production
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend/get-to-know-game
+      dockerfile: Dockerfile
+    container_name: get-to-know-frontend
+    ports:
+      - "80:80"
+    environment:
+      - VITE_API_URL=http://localhost:5012/api
+    depends_on:
+      - backend-go
+    restart: unless-stopped
 
 volumes:
   mongodb_data:

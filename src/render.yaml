@@ -1,0 +1,45 @@
+services:
+  # MongoDB Database
+  - type: pserv
+    name: get-to-know-mongodb
+    env: docker
+    dockerfilePath: ./Dockerfile.mongodb
+    plan: free
+    envVars:
+      - key: MONGO_INITDB_ROOT_USERNAME
+        sync: false
+      - key: MONGO_INITDB_ROOT_PASSWORD
+        sync: false
+
+  # Go Backend API
+  - type: web
+    name: get-to-know-backend
+    env: docker
+    dockerfilePath: ./backend/get-to-know-game-go/Dockerfile
+    plan: free
+    envVars:
+      - key: MONGODB_URI
+        fromService:
+          type: pserv
+          name: get-to-know-mongodb
+          property: connectionString
+      - key: PORT
+        value: 5012
+      - key: FIBER_ENV
+        value: production
+    healthCheckPath: /health
+
+  # SvelteKit Frontend
+  - type: web
+    name: get-to-know-frontend
+    env: docker
+    dockerfilePath: ./frontend/get-to-know-game/Dockerfile
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: get-to-know-backend
+          envVarKey: RENDER_EXTERNAL_URL
+    buildCommand: npm run build
+    startCommand: npm run preview -- --host 0.0.0.0 --port 80

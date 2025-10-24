@@ -1,6 +1,6 @@
 # Docker Setup Summary
 
-## Files Created for Railway Deployment
+## Files Created for Render Deployment
 
 ### 🐳 Docker Configuration Files
 
@@ -11,25 +11,20 @@
 
 2. **`frontend/get-to-know-game/Dockerfile`**
    - Multi-stage build for Svelte frontend
-   - Uses nginx for serving static files
-   - Optimized for production with gzip compression
+   - Uses SvelteKit for serving the application
+   - Optimized for production deployment
 
-3. **`frontend/get-to-know-game/nginx.conf`**
-   - Nginx configuration for frontend
-   - Handles client-side routing
-   - Proxies API requests to backend
-   - Includes security headers and caching
 
-4. **`docker-compose.railway.yml`**
-   - Railway-specific Docker Compose configuration
+4. **`docker-compose.yml`**
+   - Complete Docker Compose configuration
    - Defines all three services: MongoDB, Go backend, Frontend
    - Includes proper networking and dependencies
 
 ### 🔧 Configuration Files
 
-5. **`railway.json`**
-   - Railway deployment configuration
-   - Specifies build and deployment settings
+5. **`render.yaml`**
+   - Render Blueprint configuration
+   - Defines all services for automatic deployment
 
 6. **`.dockerignore` files**
    - `backend/get-to-know-game-go/.dockerignore`
@@ -38,7 +33,7 @@
 
 ### 📚 Documentation
 
-7. **`RAILWAY_DEPLOYMENT.md`**
+7. **`RENDER_DEPLOYMENT.md`**
    - Complete deployment guide
    - Step-by-step instructions
    - Troubleshooting guide
@@ -66,26 +61,33 @@
 ### 2. Push to GitHub
 ```bash
 git add .
-git commit -m "Add Docker support for Railway deployment"
+git commit -m "Add Docker support for Render deployment"
 git push origin main
 ```
 
-### 3. Deploy on Railway
-1. Go to [railway.app](https://railway.app)
+### 3. Deploy on Render
+1. Go to [render.com](https://render.com)
 2. Sign in with GitHub
-3. Create new project → Deploy from GitHub repo
+3. Create new Blueprint → Connect GitHub repo
 4. Select your repository
-5. Railway will auto-detect `docker-compose.railway.yml`
+5. Render will auto-detect `render.yaml`
 
 ### 4. Set Environment Variables
-In Railway dashboard, add these variables:
+**⚠️ SECURITY: Set these in Render dashboard, NOT in code!**
+
+In Render dashboard, add these variables:
 ```
-MONGODB_URI=mongodb://***:***@mongodb:27017/GetToKnowGame?authSource=admin
+# MongoDB Service
+MONGO_INITDB_ROOT_USERNAME=your_secure_username
+MONGO_INITDB_ROOT_PASSWORD=your_secure_password
+
+# Backend Service  
+MONGODB_URI=mongodb://your_username:your_password@mongodb:27017/GetToKnowGame?authSource=admin
 PORT=5012
 FIBER_ENV=production
-VITE_API_URL=https://your-app.railway.app/api
-MONGO_INITDB_ROOT_USERNAME=***
-MONGO_INITDB_ROOT_PASSWORD=***
+
+# Frontend Service
+VITE_API_URL=https://your-app.onrender.com/api
 ```
 
 ## 🔧 Key Features
@@ -97,13 +99,12 @@ MONGO_INITDB_ROOT_PASSWORD=***
 - ✅ Graceful shutdown
 - ✅ CORS configured for production
 
-### Frontend (Svelte + Nginx)
-- ✅ Static file serving
+### Frontend (Svelte + SvelteKit)
+- ✅ SvelteKit adapter for Node.js
 - ✅ Client-side routing support
-- ✅ API proxy to backend
-- ✅ Gzip compression
-- ✅ Security headers
-- ✅ Asset caching
+- ✅ API integration
+- ✅ Production optimized
+- ✅ Environment variable support
 
 ### Database (MongoDB)
 - ✅ Persistent volume
@@ -120,17 +121,17 @@ MONGO_INITDB_ROOT_PASSWORD=***
 ## 🌐 Production URLs
 
 After deployment, your app will be available at:
-- **Frontend**: `https://your-app.railway.app/`
-- **Backend API**: `https://your-app.railway.app/api/`
-- **Health Check**: `https://your-app.railway.app/health`
+- **Frontend**: `https://your-app.onrender.com/` (port 80)
+- **Backend API**: `https://your-app.onrender.com/api/` (port 5012)
+- **Health Check**: `https://your-app.onrender.com/health`
 
 ## 💰 Cost Estimation
 
-### Railway Free Tier
-- **$5 credit per month**
+### Render Free Tier
+- **750 hours/month per service**
 - **512MB RAM per service**
-- **1GB disk space**
-- **Unlimited bandwidth**
+- **Services sleep after 15 minutes**
+- **Wake up when accessed**
 
 ### Your App Requirements
 - **MongoDB**: ~100MB RAM
@@ -146,7 +147,7 @@ After deployment, your app will be available at:
 - Database: Connection status
 
 ### Logs
-- View in Railway dashboard
+- View in Render dashboard
 - Real-time log streaming
 - Error tracking
 
@@ -156,26 +157,21 @@ After deployment, your app will be available at:
 1. **Build failures**: Check Docker logs
 2. **CORS errors**: Verify environment variables
 3. **Database connection**: Check MongoDB URI
-4. **Frontend not loading**: Check nginx logs
+4. **Frontend not loading**: Check SvelteKit logs
 
 ### Debug Commands
 ```bash
-# View logs
-railway logs
-
-# Check status
-railway status
-
-# Restart services
-railway restart
+# View logs in Render dashboard
+# Check service status in Render dashboard
+# Restart services in Render dashboard
 ```
 
 ## 📈 Next Steps
 
-1. **Deploy to Railway** using the steps above
+1. **Deploy to Render** using the steps above
 2. **Test the application** thoroughly
 3. **Set up monitoring** and alerts
 4. **Configure custom domain** (optional)
 5. **Set up CI/CD** for automatic deployments
 
-Your app is now ready for production deployment on Railway! 🎉
+Your app is now ready for production deployment on Render! 🎉

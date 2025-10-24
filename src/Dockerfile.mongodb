@@ -1,0 +1,10 @@
+FROM mongo:latest
+
+# Environment variables will be set by Render
+# MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_PASSWORD
+
+# Expose MongoDB port
+EXPOSE 27017
+
+# Start MongoDB
+CMD ["mongod", "--bind_ip_all"]

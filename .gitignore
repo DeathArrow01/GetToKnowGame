@@ -1,49 +1,22 @@
-# .NET Core / ASP.NET Core
-bin/
-obj/
-*.user
-*.suo
-*.cache
-*.dll
-*.exe
-*.pdb
-*.runtimeconfig.json
-*.deps.json
-*.staticwebassets.endpoints.json
-*.nupkg
-*.snupkg
-project.assets.json
-project.nuget.cache
-*.csproj.nuget.dgspec.json
-*.csproj.nuget.g.props
-*.csproj.nuget.g.targets
-*.Up2Date
-*.AssemblyInfo.cs
-*.AssemblyInfoInputs.cache
-*.assets.cache
-*.AssemblyReference.cache
-*.CoreCompileInputs.cache
-*.FileListAbsolute.txt
-*.GeneratedMSBuildEditorConfig.editorconfig
-*.genruntimeconfig.cache
-*.GlobalUsings.g.cs
-ref/
-refint/
+# Environment variables and secrets
+.env
+.env.local
+.env.production
+.env.staging
+*.env
 
-# Visual Studio / Visual Studio Code
-.vs/
-.vscode/
-*.swp
-*.swo
-*~
+# Credentials and sensitive files
+credentials.json
+secrets.json
+config/secrets.yml
+config/production.yml
 
-# Node.js / npm
-node_modules/
+# Logs
+*.log
+logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
-.pnpm-debug.log*
 
 # Runtime data
 pids
@@ -58,32 +31,15 @@ coverage/
 # nyc test coverage
 .nyc_output
 
-# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
-
-# Bower dependency directory (https://bower.io/)
-bower_components
-
-# node-waf configuration
-.lock-wscript
-
-# Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
-
 # Dependency directories
+node_modules/
 jspm_packages/
-
-# TypeScript cache
-*.tsbuildinfo
 
 # Optional npm cache directory
 .npm
 
 # Optional eslint cache
 .eslintcache
-
-# Optional stylelint cache
-.stylelintcache
 
 # Microbundle cache
 .rpt2_cache/
@@ -100,12 +56,8 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variable files
-.env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
+# dotenv environment variables file
+.env.test
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -113,7 +65,6 @@ jspm_packages/
 
 # Next.js build output
 .next
-out
 
 # Nuxt.js build / generate output
 .nuxt
@@ -123,44 +74,20 @@ dist
 .cache/
 public
 
-# Vuepress build output
-.vuepress/dist
+# Storybook build outputs
+.out
+.storybook-out
 
-# Serverless directories
-.serverless/
+# Temporary folders
+tmp/
+temp/
 
-# FuseBox cache
-.fusebox/
-
-# DynamoDB Local files
-.dynamodb/
-
-# TernJS port file
-.tern-port
-
-# Stores VSCode versions used for testing VSCode extensions
-.vscode-test
-
-# yarn v2
-.yarn/cache
-.yarn/unplugged
-.yarn/build-state.yml
-.yarn/install-state.gz
-.pnp.*
-
-# SvelteKit
-.svelte-kit/
-build/
-
-# Vite
-dist/
-
-# Docker
-.dockerignore
-
-# Logs
-logs
-*.log
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
 # OS generated files
 .DS_Store
@@ -171,173 +98,35 @@ logs
 ehthumbs.db
 Thumbs.db
 
-# Windows
-*.tmp
-*.temp
-desktop.ini
-
-# IDE files
-*.swp
-*.swo
-*~
-.idea/
-*.iml
-*.ipr
-*.iws
-
-# Temporary files
-*.tmp
-*.temp
-*.bak
-*.backup
-*.orig
-
-# Database files
-*.db
-*.sqlite
-*.sqlite3
-
-# Configuration files with sensitive data
-appsettings.Development.json
-appsettings.Production.json
-*.secrets.json
-
-# Test results
-TestResults/
-*.trx
-*.coverage
-*.coveragexml
-
-# JetBrains Rider
-.idea/
-*.sln.iml
-
-# User-specific files
-*.rsuser
-*.userosscache
-*.sln.docstates
-
-# Mono auto generated files
-mono_crash.*
-
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-# JetBrains IDEs
-.idea/
-*.iml
-*.ipr
-*.iws
-
-# Visual Studio Code
-.vscode/
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-# Local History for Visual Studio Code
-.history/
-
-# Built Visual Studio Code Extensions
-*.vsix
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Icon must end with two \r
-Icon
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# Linux
-*~
-
-# temporary files which can be created if a process still has a handle open of a deleted file
-.fuse_hidden*
-
-# KDE directory preferences
-.directory
-
-# Linux trash folder which might appear on any partition or disk
-.Trash-*
-
-# .nfs files are created when an open file is removed but is still being accessed
-.nfs*
-
-# Editor directories and files
-.vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Local development
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Package managers
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
+# Docker
+.dockerignore
 
 # Build outputs
-dist/
 build/
-out/
-.next/
-.nuxt/
-.vuepress/dist/
+dist/
+*.exe
+*.dll
+*.so
+*.dylib
 
-# Cache directories
-.cache/
-.parcel-cache/
-.eslintcache
-.stylelintcache
+# Go specific
+*.test
+*.prof
+vendor/
 
-# Test coverage
-coverage/
-.nyc_output/
+# .NET specific
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.dll
+*.pdb
+*.exe
+*.log
+packages/
+!packages/build/
 
-# Misc
-*.tgz
-*.tar.gz
+# Documentation files (keep local only)
+DOCKER_SETUP_SUMMARY.md
+RENDER_DEPLOYMENT.md

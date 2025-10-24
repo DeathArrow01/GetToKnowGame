@@ -72,7 +72,7 @@ func main() {
 			}
 		}
 		
-		// For production, also allow Railway domains
+		// For production, also allow Render domains
 		if !allowed && (origin == "" || 
 			(len(origin) > 0 && (origin[:8] == "https://" || origin[:7] == "http://"))) {
 			allowed = true
