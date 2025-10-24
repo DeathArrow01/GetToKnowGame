@@ -1,4 +1,14 @@
 services:
+  # MongoDB Database
+  - type: pserv
+    name: get-to-know-mongodb
+    plan: free
+    envVars:
+      - key: MONGO_INITDB_ROOT_USERNAME
+        sync: false
+      - key: MONGO_INITDB_ROOT_PASSWORD
+        sync: false
+
   # Go Backend API
   - type: web
     name: get-to-know-backend
@@ -7,7 +17,10 @@ services:
     plan: free
     envVars:
       - key: MONGODB_URI
-        sync: false
+        fromService:
+          type: pserv
+          name: get-to-know-mongodb
+          property: connectionString
       - key: PORT
         value: 5012
       - key: FIBER_ENV
