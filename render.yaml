@@ -5,6 +5,7 @@ services:
     env: docker
     dockerfilePath: ./Dockerfile.mongodb
     plan: free
+    isPrivate: true
     envVars:
       - key: MONGO_INITDB_ROOT_USERNAME
         sync: false
