@@ -166,57 +166,57 @@
                 </div>
             {:else}
                 <!-- Progress Indicator -->
-                <div class="card-modern p-6 mb-8">
+                <div class="bg-[#1A1A2E] border border-[#374151] rounded-2xl p-6 mb-8">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-2xl font-bold text-primary">Question {currentQuestionIndex + 1} of {questions.length}</h2>
-                        <div class="badge-modern">
+                        <h2 class="text-xl font-bold text-white">Question {currentQuestionIndex + 1} of {questions.length}</h2>
+                        <div class="bg-[#8A2BE2] text-white px-3 py-1 rounded-lg text-sm font-medium">
                             {Math.round(((currentQuestionIndex + 1) / questions.length) * 100)}% Complete
                         </div>
                     </div>
-                    <div class="progress-modern">
-                        <div class="progress-fill" style="width: {((currentQuestionIndex + 1) / questions.length) * 100}%"></div>
+                    <div class="bg-[#2C2C4A] rounded-full h-2 overflow-hidden">
+                        <div class="bg-[#8A2BE2] h-full transition-all duration-300 ease-out" style="width: {((currentQuestionIndex + 1) / questions.length) * 100}%"></div>
                     </div>
                 </div>
                 
                 <!-- Question Card -->
                 {#if currentQuestion}
-                    <div class="card-modern p-8 mb-8">
+                    <div class="bg-[#1A1A2E] border border-[#374151] rounded-2xl p-8 mb-8 shadow-lg">
                         <div class="text-center mb-8">
-                            <div class="inline-block bg-gradient-purple rounded-full p-3 mb-4">
+                            <div class="inline-flex items-center justify-center w-16 h-16 bg-[#8A2BE2] rounded-2xl mb-6">
                                 <span class="text-2xl">❓</span>
                             </div>
-                            <h3 class="text-lg font-semibold text-secondary mb-2">{currentQuestion.section}</h3>
-                            <h2 class="text-3xl font-bold text-primary">{currentQuestion.questionText}</h2>
+                            <h3 class="text-sm font-medium text-[#9CA3AF] uppercase tracking-wider mb-3">{currentQuestion.section}</h3>
+                            <h2 class="text-2xl font-bold text-white leading-tight">{currentQuestion.questionText}</h2>
                         </div>
                         
-                        <div class="grid gap-4 max-w-2xl mx-auto">
+                        <div class="space-y-3 max-w-2xl mx-auto">
                             <button 
-                                class="p-6 text-left transition-all duration-300 rounded-lg border-2 box-border min-h-[80px] w-full {answers[currentQuestionIndex]?.response === 'Yay!' ? 'bg-gradient-purple border-purple-500 text-white' : 'bg-gray-800 border-gray-600 text-white hover:border-purple-300'}"
+                                class="w-full p-4 text-left transition-all duration-200 rounded-xl border border-[#374151] bg-[#2C2C4A] hover:border-[#8A2BE2] hover:bg-[#374151] {answers[currentQuestionIndex]?.response === 'Yay!' ? 'border-[#8A2BE2] bg-[#8A2BE2] text-white' : 'text-white'}"
                                 on:click={() => handleAnswerSelected({detail: {answer: 'Yay!'}})}
                             >
                                 <div class="flex items-center">
-                                    <span class="text-2xl mr-4">😍</span>
-                                    <span class="text-xl font-semibold">Yay!</span>
+                                    <span class="text-xl mr-3">😍</span>
+                                    <span class="font-medium">Yay!</span>
                                 </div>
                             </button>
                             
                             <button 
-                                class="p-6 text-left transition-all duration-300 rounded-lg border-2 box-border min-h-[80px] w-full {answers[currentQuestionIndex]?.response === 'Nay!' ? 'bg-gradient-purple border-purple-500 text-white' : 'bg-gray-800 border-gray-600 text-white hover:border-purple-300'}"
+                                class="w-full p-4 text-left transition-all duration-200 rounded-xl border border-[#374151] bg-[#2C2C4A] hover:border-[#8A2BE2] hover:bg-[#374151] {answers[currentQuestionIndex]?.response === 'Nay!' ? 'border-[#8A2BE2] bg-[#8A2BE2] text-white' : 'text-white'}"
                                 on:click={() => handleAnswerSelected({detail: {answer: 'Nay!'}})}
                             >
                                 <div class="flex items-center">
-                                    <span class="text-2xl mr-4">😒</span>
-                                    <span class="text-xl font-semibold">Nay!</span>
+                                    <span class="text-xl mr-3">😒</span>
+                                    <span class="font-medium">Nay!</span>
                                 </div>
                             </button>
                             
                             <button 
-                                class="p-6 text-left transition-all duration-300 rounded-lg border-2 box-border min-h-[80px] w-full {answers[currentQuestionIndex]?.response === 'I don\'t care!' ? 'bg-gradient-purple border-purple-500 text-white' : 'bg-gray-800 border-gray-600 text-white hover:border-purple-300'}"
+                                class="w-full p-4 text-left transition-all duration-200 rounded-xl border border-[#374151] bg-[#2C2C4A] hover:border-[#8A2BE2] hover:bg-[#374151] {answers[currentQuestionIndex]?.response === 'I don\'t care!' ? 'border-[#8A2BE2] bg-[#8A2BE2] text-white' : 'text-white'}"
                                 on:click={() => handleAnswerSelected({detail: {answer: 'I don\'t care!'}})}
                             >
                                 <div class="flex items-center">
-                                    <span class="text-2xl mr-4">🤷</span>
-                                    <span class="text-xl font-semibold">I don't care!</span>
+                                    <span class="text-xl mr-3">🤷</span>
+                                    <span class="font-medium">I don't care!</span>
                                 </div>
                             </button>
                         </div>
@@ -225,17 +225,17 @@
                 
                 <!-- Navigation -->
                 <div class="flex justify-between items-center max-w-2xl mx-auto">
-        <button
-            class="px-8 py-3 transition-all duration-300 {currentQuestionIndex === 0 ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'btn-primary-modern'}"
-            disabled={currentQuestionIndex === 0}
-            on:click={() => currentQuestionIndex--}
-        >
-            ← Previous
-        </button>
+                    <button
+                        class="px-6 py-3 rounded-xl border border-[#374151] bg-[#2C2C4A] text-white font-medium transition-all duration-200 hover:border-[#8A2BE2] hover:bg-[#374151] {currentQuestionIndex === 0 ? 'opacity-50 cursor-not-allowed hover:border-[#374151] hover:bg-[#2C2C4A]' : ''}"
+                        disabled={currentQuestionIndex === 0}
+                        on:click={() => currentQuestionIndex--}
+                    >
+                        ← Previous
+                    </button>
                     
                     {#if isLastQuestion}
                         <button 
-                            class="px-8 py-3 transition-all duration-300 {!canProceed || isSubmitting ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'btn-primary-modern'}"
+                            class="px-6 py-3 rounded-xl border border-[#8A2BE2] bg-[#8A2BE2] text-white font-medium transition-all duration-200 hover:bg-[#7C3AED] {!canProceed || isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}"
                             disabled={!canProceed || isSubmitting}
                             on:click={finishGame}
                         >
@@ -248,7 +248,7 @@
                         </button>
                     {:else}
                         <button 
-                            class="px-8 py-3 transition-all duration-300 {!canProceed ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'btn-primary-modern'}"
+                            class="px-6 py-3 rounded-xl border border-[#8A2BE2] bg-[#8A2BE2] text-white font-medium transition-all duration-200 hover:bg-[#7C3AED] {!canProceed ? 'opacity-50 cursor-not-allowed' : ''}"
                             disabled={!canProceed}
                             on:click={nextQuestion}
                         >
@@ -259,15 +259,12 @@
                 
                 <!-- Instructions -->
                 <div class="mt-8 text-center">
-                    <div class="alert-modern alert-info max-w-2xl mx-auto">
-                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <div>
-                            <h3 class="font-bold text-lg">Answer honestly!</h3>
-                            <div class="text-sm text-secondary mt-1">
-                                Choose your true preference for each question. Your compatibility score depends on matching answers!
-                            </div>
+                    <div class="bg-[#2C2C4A] border border-[#374151] rounded-xl p-4 max-w-2xl mx-auto">
+                        <div class="flex items-center justify-center text-[#9CA3AF]">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-sm">Answer honestly! Choose your true preference for each question. Your compatibility score depends on matching answers!</span>
                         </div>
                     </div>
                 </div>

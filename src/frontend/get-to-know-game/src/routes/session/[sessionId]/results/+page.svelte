@@ -107,40 +107,42 @@
     <title>Results - Get to Know Game</title>
 </svelte:head>
 
-<div class="min-h-screen gradient-bg">
+<div class="min-h-screen bg-[#0F0F23]">
     <div class="container mx-auto px-4 py-8">
         <div class="max-w-6xl mx-auto">
             {#if isLoading}
                 <div class="text-center py-20">
                     <div class="loading-modern mx-auto mb-4"></div>
-                    <p class="text-secondary text-lg">Loading your results...</p>
+                    <p class="text-[#9CA3AF] text-lg">Loading your results...</p>
                 </div>
             {:else if error}
-                <div class="alert-modern alert-error max-w-2xl mx-auto">
-                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span>{error}</span>
+                <div class="bg-[#2C2C4A] border border-red-500 rounded-xl p-4 max-w-2xl mx-auto">
+                    <div class="flex items-center text-red-400">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>{error}</span>
+                    </div>
                 </div>
             {:else if !sessionData?.isGameComplete}
                 <div class="text-center py-20">
-                    <div class="w-24 h-24 bg-gradient-purple rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div class="w-24 h-24 bg-[#8A2BE2] rounded-2xl flex items-center justify-center mx-auto mb-8">
                         <span class="text-5xl">⏳</span>
                     </div>
-                    <h1 class="text-4xl font-bold text-gradient mb-6">
+                    <h1 class="text-5xl font-bold text-white mb-6">
                         Results Not Ready Yet
                     </h1>
-                    <p class="text-xl text-secondary mb-8 max-w-2xl mx-auto">
+                    <p class="text-xl text-[#9CA3AF] mb-8 max-w-3xl mx-auto">
                         {#if !sessionData?.isPlayer2Joined}
-                            Waiting for <span class="font-bold text-primary">{sessionData?.player2Name}</span> to join the game...
+                            Waiting for <span class="font-bold text-[#8A2BE2]">{sessionData?.player2Name}</span> to join the game...
                         {:else if !sessionData?.isPlayer2Completed}
-                            Waiting for <span class="font-bold text-primary">{sessionData?.player2Name}</span> to finish answering...
+                            Waiting for <span class="font-bold text-[#8A2BE2]">{sessionData?.player2Name}</span> to finish answering...
                         {:else}
                             Calculating your compatibility score...
                         {/if}
                     </p>
                     <button 
-                        class="btn-primary-modern px-8 py-3"
+                        class="bg-[#8A2BE2] hover:bg-[#7C3AED] text-white font-semibold px-8 py-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
                         on:click={() => window.location.reload()}
                     >
                         Check Again →
@@ -149,29 +151,29 @@
             {:else}
                 <!-- Results Header -->
                 <div class="text-center mb-16">
-                    <div class="text-9xl mb-6">{emoji}</div>
-                    <h1 class="text-6xl font-bold text-gradient mb-6">
+                    <div class="text-9xl mb-8">{emoji}</div>
+                    <h1 class="text-7xl font-bold text-white mb-6">
                         {compatibilityScore}% Compatible!
                     </h1>
-                    <p class="text-2xl text-secondary">
-                        <span class="font-bold text-primary">{sessionData.player1Name}</span> and <span class="font-bold text-primary">{sessionData.player2Name}</span>
+                    <p class="text-2xl text-[#9CA3AF]">
+                        <span class="font-bold text-[#8A2BE2]">{sessionData.player1Name}</span> and <span class="font-bold text-[#8A2BE2]">{sessionData.player2Name}</span>
                     </p>
                 </div>
                 
                 <!-- Compatibility Score Card -->
-                <div class="card-modern p-12 mb-12 text-center">
+                <div class="bg-[#1A1A2E] border border-[#374151] rounded-3xl p-12 mb-12 text-center shadow-2xl">
                     <div class="relative inline-block mb-8">
-                        <div class="w-48 h-48 rounded-full bg-gradient-purple flex items-center justify-center text-6xl font-bold text-white shadow-2xl">
+                        <div class="w-48 h-48 rounded-full bg-[#8A2BE2] flex items-center justify-center text-6xl font-bold text-white shadow-2xl">
                             {compatibilityScore}%
                         </div>
-                        <div class="absolute -top-2 -right-2 w-16 h-16 bg-gradient-purple rounded-full flex items-center justify-center">
+                        <div class="absolute -top-2 -right-2 w-16 h-16 bg-[#8A2BE2] rounded-full flex items-center justify-center">
                             <span class="text-2xl">{emoji}</span>
                         </div>
                     </div>
-                    <h2 class="text-3xl font-bold text-primary mb-4">
+                    <h2 class="text-3xl font-bold text-white mb-4">
                         Compatibility Score
                     </h2>
-                    <p class="text-lg text-secondary max-w-2xl mx-auto">
+                    <p class="text-lg text-[#9CA3AF] max-w-2xl mx-auto">
                         Based on matching "Yay!" and "I don't care!" answers from both players
                     </p>
                 </div>
@@ -179,14 +181,14 @@
                 <!-- Shared Answers -->
                 {#if sharedAnswers.length > 0}
                     <div class="mb-12">
-                        <h2 class="text-4xl font-bold text-center mb-12 text-gradient">
+                        <h2 class="text-4xl font-bold text-center mb-12 text-white">
                             What You Both Agree On
                         </h2>
                         
                         <div class="grid gap-8">
                             {#each sharedAnswers as { section, items }}
-                                <div class="card-modern overflow-hidden">
-                                    <div class="bg-gradient-purple p-6">
+                                <div class="bg-[#1A1A2E] border border-[#374151] rounded-2xl overflow-hidden">
+                                    <div class="bg-[#8A2BE2] p-6">
                                         <h3 class="text-2xl font-bold text-white flex items-center">
                                             <span class="text-3xl mr-3">🎯</span>
                                             {section}
@@ -195,11 +197,11 @@
                                     <div class="p-8">
                                         <div class="grid gap-4">
                                             {#each items as item}
-                                                <div class="flex items-center space-x-4 p-4 bg-secondary-bg rounded-lg border border-border-color">
-                                                    <div class="badge-modern">
+                                                <div class="flex items-center space-x-4 p-4 bg-[#2C2C4A] rounded-xl border border-[#374151]">
+                                                    <div class="bg-[#8A2BE2] text-white px-3 py-1 rounded-lg text-sm font-semibold">
                                                         {item.response}
                                                     </div>
-                                                    <span class="text-lg text-primary font-medium">
+                                                    <span class="text-lg text-white font-medium">
                                                         {item.question.questionText}
                                                     </span>
                                                 </div>
@@ -211,14 +213,14 @@
                         </div>
                     </div>
                 {:else}
-                    <div class="card-modern p-12 mb-12 text-center">
-                        <div class="w-24 h-24 bg-gradient-purple rounded-full flex items-center justify-center mx-auto mb-6">
+                    <div class="bg-[#1A1A2E] border border-[#374151] rounded-3xl p-12 mb-12 text-center shadow-2xl">
+                        <div class="w-24 h-24 bg-[#8A2BE2] rounded-2xl flex items-center justify-center mx-auto mb-6">
                             <span class="text-4xl">🤷‍♀️</span>
                         </div>
-                        <h3 class="text-3xl font-bold text-primary mb-4">
+                        <h3 class="text-3xl font-bold text-white mb-4">
                             No Shared Preferences
                         </h3>
-                        <p class="text-lg text-secondary max-w-2xl mx-auto">
+                        <p class="text-lg text-[#9CA3AF] max-w-2xl mx-auto">
                             You didn't match on any "Yay!" or "I don't care!" answers, 
                             but that's okay! Opposites can attract too. 💕
                         </p>
@@ -228,13 +230,13 @@
                 <!-- Action Buttons -->
                 <div class="text-center space-x-4">
                     <button 
-                        class="btn-primary-modern px-8 py-4 text-lg"
+                        class="bg-[#8A2BE2] hover:bg-[#7C3AED] text-white font-semibold px-8 py-4 rounded-xl text-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
                         on:click={() => window.location.href = '/'}
                     >
                         Play Again →
                     </button>
                     <button 
-                        class="btn-secondary-modern px-8 py-4 text-lg"
+                        class="bg-[#2C2C4A] border border-[#374151] hover:border-[#8A2BE2] hover:bg-[#374151] text-white font-semibold px-8 py-4 rounded-xl text-lg transition-all duration-200"
                         on:click={() => window.location.reload()}
                     >
                         Refresh Results
