@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 80
 
 # Start the application in production mode
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "80"]
+CMD ["node", "build"]
