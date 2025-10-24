@@ -1,6 +1,8 @@
 services:
   mongodb:
-    image: mongo:latest
+    build:
+      context: ..
+      dockerfile: Dockerfile.mongodb
     container_name: get_to_know_mongodb
     ports:
       - "27017:27017"
