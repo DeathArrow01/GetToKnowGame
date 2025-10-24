@@ -7,9 +7,9 @@ services:
     plan: free
     envVars:
       - key: MONGO_INITDB_ROOT_USERNAME
-        sync: false
+        value: admin
       - key: MONGO_INITDB_ROOT_PASSWORD
-        sync: false
+        value: B1sY$501DRG#m_K
     healthCheckPath: /health
 
   # Go Backend API
