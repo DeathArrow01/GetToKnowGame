@@ -1,16 +1,14 @@
 FROM mongo:latest
 
-# Install netcat for health checks
-RUN apt-get update && apt-get install -y netcat && rm -rf /var/lib/apt/lists/*
+# Install Python for simple HTTP server
+RUN apt-get update && apt-get install -y python3 && rm -rf /var/lib/apt/lists/*
 
 # Create a simple HTTP server for health checks
 RUN echo '#!/bin/bash \
 # Start MongoDB in background \
 mongod --bind_ip_all --nojournal --fork --logpath /var/log/mongodb.log \
 # Simple HTTP server for health checks \
-while true; do \
-  echo -e "HTTP/1.1 200 OK\\n\\nMongoDB is running" | nc -l -p 80; \
-done' > /start.sh && chmod +x /start.sh
+python3 -m http.server 80' > /start.sh && chmod +x /start.sh
 
 # Expose both MongoDB and HTTP ports
 EXPOSE 27017 80
