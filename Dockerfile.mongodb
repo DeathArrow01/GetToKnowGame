@@ -3,57 +3,64 @@ FROM mongo:latest
 # Install Python for health check
 RUN apt-get update && apt-get install -y python3 && rm -rf /var/lib/apt/lists/*
 
-# Create health check script
-RUN echo '#!/usr/bin/env python3\n\
-import http.server\n\
-import socketserver\n\
-import subprocess\n\
-import sys\n\
-\n\
-class HealthCheckHandler(http.server.BaseHTTPRequestHandler):\n\
-    def do_GET(self):\n\
-        if self.path == "/health":\n\
-            try:\n\
-                # Check if MongoDB is running\n\
-                result = subprocess.run(["mongosh", "--eval", "db.runCommand(\'ping\')"], \n\
-                                      capture_output=True, timeout=5)\n\
-                if result.returncode == 0:\n\
-                    self.send_response(200)\n\
-                    self.send_header("Content-type", "text/plain")\n\
-                    self.end_headers()\n\
-                    self.wfile.write(b"OK")\n\
-                else:\n\
-                    self.send_response(503)\n\
-                    self.send_header("Content-type", "text/plain")\n\
-                    self.end_headers()\n\
-                    self.wfile.write(b"Service Unavailable")\n\
-            except Exception as e:\n\
-                self.send_response(503)\n\
-                self.send_header("Content-type", "text/plain")\n\
-                self.end_headers()\n\
-                self.wfile.write(b"Service Unavailable")\n\
-        else:\n\
-            self.send_response(404)\n\
-            self.end_headers()\n\
-    \n\
-    def log_message(self, format, *args):\n\
-        pass\n\
-\n\
-if __name__ == "__main__":\n\
-    PORT = 8080\n\
-    with socketserver.TCPServer(("", PORT), HealthCheckHandler) as httpd:\n\
-        httpd.serve_forever()' > /healthcheck.py && chmod +x /healthcheck.py
+# Create health check script using heredoc
+RUN cat > /healthcheck.py << 'EOF'
+#!/usr/bin/env python3
+import http.server
+import socketserver
+import subprocess
+import sys
 
-# Create startup script
-RUN echo '#!/bin/bash\n\
-# Start MongoDB in background\n\
-mongod --bind_ip_all &\n\
-\n\
-# Wait for MongoDB to start\n\
-sleep 10\n\
-\n\
-# Start health check server\n\
-python3 /healthcheck.py' > /start.sh && chmod +x /start.sh
+class HealthCheckHandler(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == "/health":
+            try:
+                # Check if MongoDB is running
+                result = subprocess.run(["mongosh", "--eval", "db.runCommand('ping')"], 
+                                      capture_output=True, timeout=5)
+                if result.returncode == 0:
+                    self.send_response(200)
+                    self.send_header("Content-type", "text/plain")
+                    self.end_headers()
+                    self.wfile.write(b"OK")
+                else:
+                    self.send_response(503)
+                    self.send_header("Content-type", "text/plain")
+                    self.end_headers()
+                    self.wfile.write(b"Service Unavailable")
+            except Exception as e:
+                self.send_response(503)
+                self.send_header("Content-type", "text/plain")
+                self.end_headers()
+                self.wfile.write(b"Service Unavailable")
+        else:
+            self.send_response(404)
+            self.end_headers()
+    
+    def log_message(self, format, *args):
+        pass
+
+if __name__ == "__main__":
+    PORT = 8080
+    with socketserver.TCPServer(("", PORT), HealthCheckHandler) as httpd:
+        httpd.serve_forever()
+EOF
+
+# Create startup script using heredoc
+RUN cat > /start.sh << 'EOF'
+#!/bin/bash
+# Start MongoDB in background
+mongod --bind_ip_all &
+
+# Wait for MongoDB to start
+sleep 10
+
+# Start health check server
+python3 /healthcheck.py
+EOF
+
+# Make scripts executable
+RUN chmod +x /healthcheck.py /start.sh
 
 # Expose ports
 EXPOSE 27017 8080
