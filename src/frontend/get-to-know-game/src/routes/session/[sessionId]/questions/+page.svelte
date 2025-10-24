@@ -191,7 +191,7 @@
                         
                         <div class="grid gap-4 max-w-2xl mx-auto">
                             <button 
-                                class="btn-secondary-modern p-6 text-left transition-all duration-300 {answers[currentQuestionIndex]?.response === 'Yay!' ? 'bg-gradient-purple border-purple-500 text-white' : ''}"
+                                class="p-6 text-left transition-all duration-300 rounded-lg border-2 box-border min-h-[80px] w-full {answers[currentQuestionIndex]?.response === 'Yay!' ? 'bg-gradient-purple border-purple-500 text-white' : 'bg-gray-800 border-gray-600 text-white hover:border-purple-300'}"
                                 on:click={() => handleAnswerSelected({detail: {answer: 'Yay!'}})}
                             >
                                 <div class="flex items-center">
@@ -201,7 +201,7 @@
                             </button>
                             
                             <button 
-                                class="btn-secondary-modern p-6 text-left transition-all duration-300 {answers[currentQuestionIndex]?.response === 'Nay!' ? 'bg-gradient-purple border-purple-500 text-white' : ''}"
+                                class="p-6 text-left transition-all duration-300 rounded-lg border-2 box-border min-h-[80px] w-full {answers[currentQuestionIndex]?.response === 'Nay!' ? 'bg-gradient-purple border-purple-500 text-white' : 'bg-gray-800 border-gray-600 text-white hover:border-purple-300'}"
                                 on:click={() => handleAnswerSelected({detail: {answer: 'Nay!'}})}
                             >
                                 <div class="flex items-center">
@@ -211,7 +211,7 @@
                             </button>
                             
                             <button 
-                                class="btn-secondary-modern p-6 text-left transition-all duration-300 {answers[currentQuestionIndex]?.response === 'I don\'t care!' ? 'bg-gradient-purple border-purple-500 text-white' : ''}"
+                                class="p-6 text-left transition-all duration-300 rounded-lg border-2 box-border min-h-[80px] w-full {answers[currentQuestionIndex]?.response === 'I don\'t care!' ? 'bg-gradient-purple border-purple-500 text-white' : 'bg-gray-800 border-gray-600 text-white hover:border-purple-300'}"
                                 on:click={() => handleAnswerSelected({detail: {answer: 'I don\'t care!'}})}
                             >
                                 <div class="flex items-center">
@@ -225,17 +225,17 @@
                 
                 <!-- Navigation -->
                 <div class="flex justify-between items-center max-w-2xl mx-auto">
-                    <button 
-                        class="btn-secondary-modern px-8 py-3"
-                        disabled={currentQuestionIndex === 0}
-                        on:click={() => currentQuestionIndex--}
-                    >
-                        ← Previous
-                    </button>
+        <button
+            class="px-8 py-3 transition-all duration-300 {currentQuestionIndex === 0 ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'btn-primary-modern'}"
+            disabled={currentQuestionIndex === 0}
+            on:click={() => currentQuestionIndex--}
+        >
+            ← Previous
+        </button>
                     
                     {#if isLastQuestion}
                         <button 
-                            class="btn-primary-modern px-8 py-3"
+                            class="px-8 py-3 transition-all duration-300 {!canProceed || isSubmitting ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'btn-primary-modern'}"
                             disabled={!canProceed || isSubmitting}
                             on:click={finishGame}
                         >
@@ -248,7 +248,7 @@
                         </button>
                     {:else}
                         <button 
-                            class="btn-primary-modern px-8 py-3"
+                            class="px-8 py-3 transition-all duration-300 {!canProceed ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'btn-primary-modern'}"
                             disabled={!canProceed}
                             on:click={nextQuestion}
                         >

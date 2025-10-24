@@ -189,8 +189,11 @@ The MongoDB container is configured with:
 	$ cd src
 	$ docker-compose up -d
 	
-	### Start Backend: 
+	### Start .NET Backend: 
 	$ cd backend && dotnet run --project GetToKnowGame
+	
+	### Start Go Backend
+	$ cd backend/get-to-know-game-go && .\get-to-know-game-go.exe
 	
 	### Start Frontend: 
 	$ cd frontend/get-to-know-game && npm install && npm run dev
