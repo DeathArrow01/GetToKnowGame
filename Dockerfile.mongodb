@@ -1,7 +1,7 @@
 FROM mongo:latest
 
-# Install nginx for health checks
-RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
+# Install nginx and supervisor for process management
+RUN apt-get update && apt-get install -y nginx supervisor && rm -rf /var/lib/apt/lists/*
 
 # Create nginx config for health checks
 RUN echo 'server { \
@@ -16,17 +16,32 @@ RUN echo 'server { \
     } \
 }' > /etc/nginx/sites-available/default
 
-# Create startup script
-RUN echo '#!/bin/bash \
-# Start MongoDB in background \
-mongod --bind_ip_all --fork --logpath /var/log/mongodb.log \
-# Start nginx for health checks \
-nginx \
-# Keep container running \
-tail -f /var/log/mongodb.log' > /start.sh && chmod +x /start.sh
+# Create supervisor config
+RUN echo '[supervisord] \
+nodaemon=true \
+user=root \
+logfile=/var/log/supervisor/supervisord.log \
+pidfile=/var/run/supervisord.pid \
+ \
+[program:mongodb] \
+command=mongod --bind_ip_all --nojournal \
+autostart=true \
+autorestart=true \
+stderr_logfile=/var/log/supervisor/mongodb.err.log \
+stdout_logfile=/var/log/supervisor/mongodb.out.log \
+ \
+[program:nginx] \
+command=nginx -g "daemon off;" \
+autostart=true \
+autorestart=true \
+stderr_logfile=/var/log/supervisor/nginx.err.log \
+stdout_logfile=/var/log/supervisor/nginx.out.log' > /etc/supervisor/conf.d/supervisord.conf
+
+# Create log directory
+RUN mkdir -p /var/log/supervisor
 
 # Expose both MongoDB and HTTP ports
 EXPOSE 27017 80
 
-# Start both services
-CMD ["/start.sh"]
+# Start supervisor to manage both services
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
