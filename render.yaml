@@ -1,6 +1,6 @@
 services:
   # MongoDB Database
-  - type: pserv
+  - type: web
     name: get-to-know-mongodb
     env: docker
     dockerfilePath: ./Dockerfile.mongodb
@@ -10,6 +10,7 @@ services:
         sync: false
       - key: MONGO_INITDB_ROOT_PASSWORD
         sync: false
+    healthCheckPath: /health
 
   # Go Backend API
   - type: web

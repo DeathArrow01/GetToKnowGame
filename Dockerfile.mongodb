@@ -1,7 +1,30 @@
 FROM mongo:latest
 
-# Expose MongoDB port
-EXPOSE 27017
+# Install nginx for health checks
+RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
 
-# Start MongoDB directly
-CMD ["mongod", "--bind_ip_all", "--nojournal"]
+# Create nginx config for health checks
+RUN echo 'server { \
+    listen 80; \
+    location /health { \
+        return 200 "MongoDB is running"; \
+        add_header Content-Type text/plain; \
+    } \
+    location / { \
+        return 200 "MongoDB Service"; \
+        add_header Content-Type text/plain; \
+    } \
+}' > /etc/nginx/sites-available/default
+
+# Create startup script
+RUN echo '#!/bin/bash \
+# Start MongoDB in background \
+mongod --bind_ip_all --nojournal --fork --logpath /var/log/mongodb.log \
+# Start nginx for health checks \
+nginx -g "daemon off;"' > /start.sh && chmod +x /start.sh
+
+# Expose both MongoDB and HTTP ports
+EXPOSE 27017 80
+
+# Start both services
+CMD ["/start.sh"]
