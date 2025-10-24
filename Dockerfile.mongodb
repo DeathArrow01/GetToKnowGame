@@ -4,4 +4,4 @@ FROM mongo:latest
 EXPOSE 27017
 
 # Start MongoDB directly
-CMD ["mongod", "--bind_ip_all", "--nojournal"]
+CMD ["mongod", "--bind_ip_all"]
