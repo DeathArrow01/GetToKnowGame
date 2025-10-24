@@ -4,14 +4,14 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy package files from the frontend directory
+COPY src/frontend/get-to-know-game/package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy source code
-COPY . .
+# Copy source code from the frontend directory
+COPY src/frontend/get-to-know-game/ .
 
 # Build the application
 RUN npm run build

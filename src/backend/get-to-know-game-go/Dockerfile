@@ -6,14 +6,14 @@ RUN apk add --no-cache git ca-certificates
 
 WORKDIR /app
 
-# Copy go mod and sum files
-COPY go.mod go.sum ./
+# Copy go mod and sum files from the backend directory
+COPY src/backend/get-to-know-game-go/go.mod src/backend/get-to-know-game-go/go.sum ./
 
 # Download dependencies
 RUN go mod download
 
-# Copy source code
-COPY . .
+# Copy source code from the backend directory
+COPY src/backend/get-to-know-game-go/ .
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
@@ -37,7 +37,7 @@ EXPOSE 5012
 
 # Set environment variables
 ENV PORT=5012
-ENV GIN_MODE=release
+ENV FIBER_ENV=production
 
 # Run the application
 CMD ["./main"]
