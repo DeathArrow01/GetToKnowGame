@@ -1,15 +1,16 @@
 services:
-  # MongoDB Database
-  - type: web
-    name: get-to-know-mongodb
-    env: docker
-    dockerfilePath: ./Dockerfile.mongodb
-    plan: free
-    envVars:
-      - key: MONGO_INITDB_ROOT_USERNAME
-        sync: false
-      - key: MONGO_INITDB_ROOT_PASSWORD
-        sync: false
+      # MongoDB Database
+      - type: web
+        name: get-to-know-mongodb
+        env: docker
+        dockerfilePath: ./Dockerfile.mongodb
+        plan: free
+        healthCheckPath: /health
+        envVars:
+          - key: MONGO_INITDB_ROOT_USERNAME
+            sync: false
+          - key: MONGO_INITDB_ROOT_PASSWORD
+            sync: false
 
   # Go Backend API
   - type: web
