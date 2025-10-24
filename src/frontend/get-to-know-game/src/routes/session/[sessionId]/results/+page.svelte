@@ -150,58 +150,58 @@
                 </div>
             {:else}
                 <!-- Results Header -->
-                <div class="text-center mb-16">
-                    <div class="text-9xl mb-8">{emoji}</div>
-                    <h1 class="text-7xl font-bold text-white mb-6">
+                <div class="text-center mb-8">
+                    <div class="text-4xl mb-4">{emoji}</div>
+                    <h1 class="text-3xl font-bold text-white mb-4">
                         {compatibilityScore}% Compatible!
                     </h1>
-                    <p class="text-2xl text-[#9CA3AF]">
+                    <p class="text-lg text-[#9CA3AF]">
                         <span class="font-bold text-[#8A2BE2]">{sessionData.player1Name}</span> and <span class="font-bold text-[#8A2BE2]">{sessionData.player2Name}</span>
                     </p>
                 </div>
                 
                 <!-- Compatibility Score Card -->
-                <div class="bg-[#1A1A2E] border border-[#374151] rounded-3xl p-12 mb-12 text-center shadow-2xl">
-                    <div class="relative inline-block mb-8">
-                        <div class="w-48 h-48 rounded-full bg-[#8A2BE2] flex items-center justify-center text-6xl font-bold text-white shadow-2xl">
+                <div class="bg-[#1A1A2E] border border-[#374151] rounded-xl p-6 mb-8 text-center shadow-lg">
+                    <div class="relative inline-block mb-4">
+                        <div class="w-24 h-24 rounded-full bg-[#8A2BE2] flex items-center justify-center text-2xl font-bold text-white shadow-lg">
                             {compatibilityScore}%
                         </div>
-                        <div class="absolute -top-2 -right-2 w-16 h-16 bg-[#8A2BE2] rounded-full flex items-center justify-center">
-                            <span class="text-2xl">{emoji}</span>
+                        <div class="absolute -top-1 -right-1 w-8 h-8 bg-[#8A2BE2] rounded-full flex items-center justify-center">
+                            <span class="text-sm">{emoji}</span>
                         </div>
                     </div>
-                    <h2 class="text-3xl font-bold text-white mb-4">
+                    <h2 class="text-xl font-bold text-white mb-2">
                         Compatibility Score
                     </h2>
-                    <p class="text-lg text-[#9CA3AF] max-w-2xl mx-auto">
+                    <p class="text-sm text-[#9CA3AF] max-w-xl mx-auto">
                         Based on matching "Yay!" and "I don't care!" answers from both players
                     </p>
                 </div>
                 
                 <!-- Shared Answers -->
                 {#if sharedAnswers.length > 0}
-                    <div class="mb-12">
-                        <h2 class="text-4xl font-bold text-center mb-12 text-white">
+                    <div class="mb-8">
+                        <h2 class="text-2xl font-bold text-center mb-6 text-white">
                             What You Both Agree On
                         </h2>
                         
-                        <div class="grid gap-8">
+                        <div class="grid gap-4">
                             {#each sharedAnswers as { section, items }}
-                                <div class="bg-[#1A1A2E] border border-[#374151] rounded-2xl overflow-hidden">
-                                    <div class="bg-[#8A2BE2] p-6">
-                                        <h3 class="text-2xl font-bold text-white flex items-center">
-                                            <span class="text-3xl mr-3">🎯</span>
+                                <div class="bg-[#1A1A2E] border border-[#374151] rounded-xl overflow-hidden">
+                                    <div class="bg-[#8A2BE2] p-3">
+                                        <h3 class="text-lg font-bold text-white flex items-center">
+                                            <span class="text-xl mr-2">🎯</span>
                                             {section}
                                         </h3>
                                     </div>
-                                    <div class="p-8">
-                                        <div class="grid gap-4">
+                                    <div class="p-4">
+                                        <div class="grid gap-2">
                                             {#each items as item}
-                                                <div class="flex items-center space-x-4 p-4 bg-[#2C2C4A] rounded-xl border border-[#374151]">
-                                                    <div class="bg-[#8A2BE2] text-white px-3 py-1 rounded-lg text-sm font-semibold">
+                                                <div class="flex items-center space-x-3 p-3 bg-[#2C2C4A] rounded-lg border border-[#374151]">
+                                                    <div class="bg-[#8A2BE2] text-white px-2 py-1 rounded text-xs font-semibold">
                                                         {item.response}
                                                     </div>
-                                                    <span class="text-lg text-white font-medium">
+                                                    <span class="text-sm text-white font-medium">
                                                         {item.question.questionText}
                                                     </span>
                                                 </div>
@@ -213,14 +213,14 @@
                         </div>
                     </div>
                 {:else}
-                    <div class="bg-[#1A1A2E] border border-[#374151] rounded-3xl p-12 mb-12 text-center shadow-2xl">
-                        <div class="w-24 h-24 bg-[#8A2BE2] rounded-2xl flex items-center justify-center mx-auto mb-6">
-                            <span class="text-4xl">🤷‍♀️</span>
+                    <div class="bg-[#1A1A2E] border border-[#374151] rounded-xl p-6 mb-8 text-center shadow-lg">
+                        <div class="w-12 h-12 bg-[#8A2BE2] rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <span class="text-2xl">🤷‍♀️</span>
                         </div>
-                        <h3 class="text-3xl font-bold text-white mb-4">
+                        <h3 class="text-xl font-bold text-white mb-3">
                             No Shared Preferences
                         </h3>
-                        <p class="text-lg text-[#9CA3AF] max-w-2xl mx-auto">
+                        <p class="text-sm text-[#9CA3AF] max-w-xl mx-auto">
                             You didn't match on any "Yay!" or "I don't care!" answers, 
                             but that's okay! Opposites can attract too. 💕
                         </p>
@@ -228,15 +228,15 @@
                 {/if}
                 
                 <!-- Action Buttons -->
-                <div class="text-center space-x-4">
+                <div class="text-center space-x-3">
                     <button 
-                        class="bg-[#8A2BE2] hover:bg-[#7C3AED] text-white font-semibold px-8 py-4 rounded-xl text-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                        class="bg-[#8A2BE2] hover:bg-[#7C3AED] text-white font-semibold px-6 py-3 rounded-xl text-base transition-all duration-200 transform hover:scale-105 shadow-lg"
                         on:click={() => window.location.href = '/'}
                     >
                         Play Again →
                     </button>
                     <button 
-                        class="bg-[#2C2C4A] border border-[#374151] hover:border-[#8A2BE2] hover:bg-[#374151] text-white font-semibold px-8 py-4 rounded-xl text-lg transition-all duration-200"
+                        class="bg-[#2C2C4A] border border-[#374151] hover:border-[#8A2BE2] hover:bg-[#374151] text-white font-semibold px-6 py-3 rounded-xl text-base transition-all duration-200"
                         on:click={() => window.location.reload()}
                     >
                         Refresh Results

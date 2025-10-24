@@ -2,197 +2,593 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles for Mailgo-inspired design */
+/* Mailgo-inspired Design System */
 :root {
-  --primary-bg: #1A1A2E;
-  --secondary-bg: #2C2C4A;
-  --accent-purple: #8A2BE2;
-  --accent-purple-light: #A855F7;
-  --text-primary: #FFFFFF;
-  --text-secondary: #CCCCCC;
-  --text-muted: #9CA3AF;
-  --border-color: #374151;
-  --card-bg: #2C2C4A;
-  --hover-bg: #374151;
+  /* Colors */
+  --mailgo-bg-primary: #0F0F23;
+  --mailgo-bg-secondary: #1A1A2E;
+  --mailgo-bg-tertiary: #2C2C4A;
+  --mailgo-purple: #8A2BE2;
+  --mailgo-purple-hover: #7C3AED;
+  --mailgo-border: #374151;
+  --mailgo-text-primary: #FFFFFF;
+  --mailgo-text-muted: #9CA3AF;
+  --mailgo-error: #EF4444;
+  --mailgo-success: #10B981;
 }
 
+/* Base Styles */
 * {
   box-sizing: border-box;
 }
 
 body {
-  background-color: var(--primary-bg);
-  color: var(--text-primary);
+  background-color: var(--mailgo-bg-primary);
+  color: var(--mailgo-text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
 }
 
-/* Custom gradient backgrounds */
-.gradient-bg {
-  background: linear-gradient(135deg, var(--primary-bg) 0%, #16213E 100%);
+/* Page Layout */
+.mailgo-page {
+  min-height: 100vh;
+  background-color: var(--mailgo-bg-primary);
 }
 
-.gradient-purple {
-  background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-purple-light) 100%);
+.mailgo-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
-/* Card styling */
-.card-modern {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
+.mailgo-container-wide {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
-.card-modern:hover {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  transform: translateY(-2px);
-  transition: all 0.3s ease;
+/* Typography */
+.mailgo-title-xl {
+  font-size: 4.5rem;
+  font-weight: 700;
+  color: var(--mailgo-text-primary);
+  line-height: 1.1;
 }
 
-/* Button styling */
-.btn-primary-modern {
-  background: var(--gradient-purple);
-  color: var(--text-primary);
-  border: none;
-  border-radius: 12px;
-  padding: 12px 24px;
+.mailgo-title-lg {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--mailgo-text-primary);
+  line-height: 1.2;
+}
+
+.mailgo-title-md {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--mailgo-text-primary);
+  line-height: 1.3;
+}
+
+.mailgo-title-sm {
+  font-size: 1.5rem;
   font-weight: 600;
-  font-size: 16px;
-  cursor: pointer;
+  color: var(--mailgo-text-primary);
+  line-height: 1.4;
+}
+
+.mailgo-text-lg {
+  font-size: 1.25rem;
+  color: var(--mailgo-text-muted);
+  line-height: 1.6;
+}
+
+.mailgo-text-md {
+  font-size: 1rem;
+  color: var(--mailgo-text-muted);
+  line-height: 1.6;
+}
+
+.mailgo-text-sm {
+  font-size: 0.875rem;
+  color: var(--mailgo-text-muted);
+  line-height: 1.5;
+}
+
+.mailgo-accent {
+  color: var(--mailgo-purple);
+  font-weight: 600;
+}
+
+/* Cards */
+.mailgo-card {
+  background-color: var(--mailgo-bg-secondary);
+  border: 1px solid var(--mailgo-border);
+  border-radius: 1.5rem;
+  padding: 3rem;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+.mailgo-card-lg {
+  background-color: var(--mailgo-bg-secondary);
+  border: 1px solid var(--mailgo-border);
+  border-radius: 1.5rem;
+  padding: 3rem;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+.mailgo-card-md {
+  background-color: var(--mailgo-bg-secondary);
+  border: 1px solid var(--mailgo-border);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.mailgo-card-sm {
+  background-color: var(--mailgo-bg-secondary);
+  border: 1px solid var(--mailgo-border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.mailgo-card-hover {
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+}
+
+.mailgo-card-hover:hover {
+  border-color: var(--mailgo-purple);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Buttons */
+.mailgo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+}
+
+.mailgo-btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  border-radius: 0.75rem;
+}
+
+.mailgo-btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+}
+
+.mailgo-btn-primary {
+  background-color: var(--mailgo-purple);
+  color: var(--mailgo-text-primary);
+  box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+}
+
+.mailgo-btn-primary:hover {
+  background-color: var(--mailgo-purple-hover);
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4);
+}
+
+.mailgo-btn-secondary {
+  background-color: var(--mailgo-bg-tertiary);
+  color: var(--mailgo-text-primary);
+  border: 1px solid var(--mailgo-border);
+}
+
+.mailgo-btn-secondary:hover {
+  background-color: var(--mailgo-border);
+  border-color: var(--mailgo-purple);
+}
+
+.mailgo-btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Inputs */
+.mailgo-input {
+  width: 100%;
+  background-color: var(--mailgo-bg-tertiary);
+  border: 1px solid var(--mailgo-border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  color: var(--mailgo-text-primary);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.mailgo-input:focus {
+  outline: none;
+  border-color: var(--mailgo-purple);
+  box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
+}
+
+.mailgo-input::placeholder {
+  color: var(--mailgo-text-muted);
+}
+
+.mailgo-label {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--mailgo-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+/* Icons */
+.mailgo-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--mailgo-text-muted);
+  transition: color 0.2s ease;
+}
+
+.mailgo-icon-lg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.mailgo-icon-xl {
+  width: 3rem;
+  height: 3rem;
+}
+
+.mailgo-icon-purple {
+  color: var(--mailgo-purple);
+}
+
+.mailgo-icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--mailgo-purple);
+  border-radius: 1rem;
+  width: 4rem;
+  height: 4rem;
+}
+
+.mailgo-icon-container-lg {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 1.25rem;
+}
+
+.mailgo-icon-container-xl {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 1.5rem;
+}
+
+/* Badges */
+.mailgo-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--mailgo-purple);
+  color: var(--mailgo-text-primary);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.mailgo-badge-sm {
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.375rem;
+}
+
+/* Alerts */
+.mailgo-alert {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid;
+}
+
+.mailgo-alert-info {
+  background-color: var(--mailgo-bg-tertiary);
+  border-color: var(--mailgo-purple);
+  color: var(--mailgo-text-primary);
+}
+
+.mailgo-alert-error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: var(--mailgo-error);
+  color: #FCA5A5;
+}
+
+.mailgo-alert-success {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-color: var(--mailgo-success);
+  color: #6EE7B7;
+}
+
+/* Progress */
+.mailgo-progress {
+  background-color: var(--mailgo-bg-tertiary);
+  border-radius: 0.5rem;
+  height: 0.5rem;
+  overflow: hidden;
+}
+
+.mailgo-progress-fill {
+  background-color: var(--mailgo-purple);
+  height: 100%;
+  border-radius: 0.5rem;
+  transition: width 0.3s ease;
+}
+
+/* Loading */
+.mailgo-loading {
+  border: 3px solid var(--mailgo-border);
+  border-top: 3px solid var(--mailgo-purple);
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  animation: mailgo-spin 1s linear infinite;
+}
+
+@keyframes mailgo-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Spacing */
+.mailgo-spacing-xs { margin: 0.5rem 0; }
+.mailgo-spacing-sm { margin: 1rem 0; }
+.mailgo-spacing-md { margin: 1.5rem 0; }
+.mailgo-spacing-lg { margin: 2rem 0; }
+.mailgo-spacing-xl { margin: 3rem 0; }
+
+.mailgo-spacing-top-xs { margin-top: 0.5rem; }
+.mailgo-spacing-top-sm { margin-top: 1rem; }
+.mailgo-spacing-top-md { margin-top: 1.5rem; }
+.mailgo-spacing-top-lg { margin-top: 2rem; }
+.mailgo-spacing-top-xl { margin-top: 3rem; }
+
+.mailgo-spacing-bottom-xs { margin-bottom: 0.5rem; }
+.mailgo-spacing-bottom-sm { margin-bottom: 1rem; }
+.mailgo-spacing-bottom-md { margin-bottom: 1.5rem; }
+.mailgo-spacing-bottom-lg { margin-bottom: 2rem; }
+.mailgo-spacing-bottom-xl { margin-bottom: 3rem; }
+
+/* Grid */
+.mailgo-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.mailgo-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.mailgo-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.mailgo-grid-responsive {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .mailgo-grid-responsive {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .mailgo-grid-responsive {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Flexbox */
+.mailgo-flex {
+  display: flex;
+  align-items: center;
+}
+
+.mailgo-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mailgo-flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mailgo-flex-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mailgo-flex-col-start {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Text Alignment */
+.mailgo-text-center { text-align: center; }
+.mailgo-text-left { text-align: left; }
+.mailgo-text-right { text-align: right; }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mailgo-container {
+    padding: 1rem 0.5rem;
+  }
+  
+  .mailgo-title-xl {
+    font-size: 3rem;
+  }
+  
+  .mailgo-title-lg {
+    font-size: 2.25rem;
+  }
+  
+  .mailgo-card {
+    padding: 2rem 1.5rem;
+    border-radius: 1rem;
+  }
+  
+  .mailgo-card-lg {
+    padding: 2rem 1.5rem;
+    border-radius: 1rem;
+  }
+  
+  .mailgo-btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+  }
+  
+  .mailgo-btn-lg {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  .mailgo-grid-2,
+  .mailgo-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Legacy classes for backward compatibility */
+.gradient-bg {
+  background-color: var(--mailgo-bg-primary);
+}
+
+.card-modern {
+  background-color: var(--mailgo-bg-secondary);
+  border: 1px solid var(--mailgo-border);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary-modern {
+  background-color: var(--mailgo-purple);
+  color: var(--mailgo-text-primary);
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .btn-primary-modern:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
+  background-color: var(--mailgo-purple-hover);
+  transform: translateY(-1px);
 }
 
 .btn-secondary-modern {
-  background: var(--secondary-bg);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 12px 24px;
+  background-color: var(--mailgo-bg-tertiary);
+  color: var(--mailgo-text-primary);
+  border: 1px solid var(--mailgo-border);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .btn-secondary-modern:hover {
-  background: var(--hover-bg);
-  border-color: var(--accent-purple);
+  background-color: var(--mailgo-border);
+  border-color: var(--mailgo-purple);
 }
 
-/* Input styling */
 .input-modern {
-  background: var(--secondary-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 12px 16px;
-  color: var(--text-primary);
-  font-size: 16px;
-  transition: all 0.3s ease;
+  background-color: var(--mailgo-bg-tertiary);
+  border: 1px solid var(--mailgo-border);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--mailgo-text-primary);
+  font-size: 1rem;
+  transition: all 0.2s ease;
 }
 
 .input-modern:focus {
   outline: none;
-  border-color: var(--accent-purple);
+  border-color: var(--mailgo-purple);
   box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
 }
 
 .input-modern::placeholder {
-  color: var(--text-muted);
+  color: var(--mailgo-text-muted);
 }
 
-/* Text styling */
 .text-gradient {
-  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-purple-light) 100%);
+  background: linear-gradient(135deg, var(--mailgo-text-primary) 0%, var(--mailgo-purple) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Loading spinner */
 .loading-modern {
-  border: 3px solid var(--border-color);
-  border-top: 3px solid var(--accent-purple);
+  border: 3px solid var(--mailgo-border);
+  border-top: 3px solid var(--mailgo-purple);
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  animation: spin 1s linear infinite;
+  width: 1.5rem;
+  height: 1.5rem;
+  animation: mailgo-spin 1s linear infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.alert-modern {
+  background-color: var(--mailgo-bg-tertiary);
+  border: 1px solid var(--mailgo-border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  color: var(--mailgo-text-primary);
 }
 
-/* Progress bar */
+.alert-error {
+  border-color: var(--mailgo-error);
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.alert-info {
+  border-color: var(--mailgo-purple);
+  background-color: rgba(138, 43, 226, 0.1);
+}
+
+.badge-modern {
+  background-color: var(--mailgo-purple);
+  color: var(--mailgo-text-primary);
+  border-radius: 1rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
 .progress-modern {
-  background: var(--secondary-bg);
-  border-radius: 10px;
-  height: 8px;
+  background-color: var(--mailgo-bg-tertiary);
+  border-radius: 0.5rem;
+  height: 0.5rem;
   overflow: hidden;
 }
 
 .progress-modern .progress-fill {
-  background: var(--gradient-purple);
+  background-color: var(--mailgo-purple);
   height: 100%;
-  border-radius: 10px;
+  border-radius: 0.5rem;
   transition: width 0.3s ease;
-}
-
-/* Alert styling */
-.alert-modern {
-  background: var(--secondary-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 16px;
-  color: var(--text-primary);
-}
-
-.alert-error {
-  border-color: #EF4444;
-  background: rgba(239, 68, 68, 0.1);
-}
-
-.alert-info {
-  border-color: var(--accent-purple);
-  background: rgba(138, 43, 226, 0.1);
-}
-
-/* Badge styling */
-.badge-modern {
-  background: var(--accent-purple);
-  color: var(--text-primary);
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-/* Icon styling */
-.icon-modern {
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
-}
-
-.icon-modern:hover {
-  color: var(--accent-purple);
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .card-modern {
-    border-radius: 12px;
-    margin: 8px;
-  }
-  
-  .btn-primary-modern,
-  .btn-secondary-modern {
-    padding: 10px 20px;
-    font-size: 14px;
-  }
 }

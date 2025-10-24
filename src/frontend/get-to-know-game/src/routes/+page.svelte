@@ -37,121 +37,117 @@
     <title>Get to Know Game</title>
 </svelte:head>
 
-<div class="min-h-screen bg-[#0F0F23]">
-    <div class="container mx-auto px-4 py-8">
-        <div class="max-w-6xl mx-auto">
-            <!-- Header -->
-            <div class="text-center mb-20">
-                <div class="flex items-center justify-center mb-8">
-                    <div class="w-16 h-16 bg-[#8A2BE2] rounded-2xl flex items-center justify-center mr-4">
-                        <span class="text-3xl">🎯</span>
-                    </div>
-                    <h1 class="text-7xl font-bold text-white">
-                        Get to Know <span class="text-[#8A2BE2]">Game</span>
-                    </h1>
+<div class="mailgo-page">
+    <div class="mailgo-container-wide">
+        <!-- Header -->
+        <div class="mailgo-text-center mailgo-spacing-bottom-lg">
+            <div class="mailgo-flex-center mailgo-spacing-bottom-md">
+                <div class="mailgo-icon-container mailgo-spacing-bottom-sm">
+                    <span class="text-2xl">🎯</span>
                 </div>
-                <p class="text-xl text-[#9CA3AF] max-w-3xl mx-auto leading-relaxed">
-                    Discover how compatible you are with your friends through our AI-powered compatibility assessment!
+                <h1 class="mailgo-title-lg">
+                    Get to Know <span class="mailgo-accent">Game</span>
+                </h1>
+            </div>
+            <p class="mailgo-text-md max-w-2xl mx-auto">
+                Discover how compatible you are with your friends through our AI-powered compatibility assessment!
+            </p>
+        </div>
+            
+        <!-- Main Card -->
+        <div class="mailgo-card mailgo-spacing-bottom-lg">
+            <div class="mailgo-text-center mailgo-spacing-bottom-md">
+                <h2 class="mailgo-title-md mailgo-spacing-bottom-sm">
+                    Start a New Game
+                </h2>
+                <p class="mailgo-text-md">
+                    Enter your names and begin your compatibility journey
                 </p>
             </div>
             
-            <!-- Main Card -->
-            <div class="bg-[#1A1A2E] border border-[#374151] rounded-3xl p-12 mb-16 shadow-2xl">
-                <div class="text-center mb-10">
-                    <h2 class="text-4xl font-bold text-white mb-6">
-                        Start a New Game
-                    </h2>
-                    <p class="text-[#9CA3AF] text-lg">
-                        Enter your names and begin your compatibility journey
-                    </p>
+            {#if error}
+                <div class="mailgo-alert mailgo-alert-error mailgo-spacing-bottom-lg">
+                    <svg class="mailgo-icon mailgo-spacing-bottom-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>{error}</span>
                 </div>
-                
-                {#if error}
-                    <div class="bg-[#2C2C4A] border border-red-500 rounded-xl p-4 mb-8">
-                        <div class="flex items-center text-red-400">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span>{error}</span>
-                        </div>
-                    </div>
-                {/if}
-                
-                {#if isLoading}
-                    <div class="text-center py-16">
-                        <div class="loading-modern mx-auto mb-4"></div>
-                        <p class="text-[#9CA3AF]">Creating your game session...</p>
-                    </div>
-                {:else}
-                    <form on:submit|preventDefault={createSession} class="space-y-8">
-                        <div class="grid md:grid-cols-2 gap-8">
-                            <div class="space-y-3">
-                                <label class="block text-lg font-semibold text-white" for="player1">
-                                    Your Name
-                                </label>
-                                <input 
-                                    type="text" 
-                                    id="player1"
-                                    bind:value={player1Name}
-                                    placeholder="Enter your name"
-                                    class="w-full p-4 bg-[#2C2C4A] border border-[#374151] rounded-xl text-white placeholder-[#9CA3AF] focus:border-[#8A2BE2] focus:outline-none transition-colors"
-                                    required
-                                />
-                            </div>
-                            
-                            <div class="space-y-3">
-                                <label class="block text-lg font-semibold text-white" for="player2">
-                                    Friend's Name
-                                </label>
-                                <input 
-                                    type="text" 
-                                    id="player2"
-                                    bind:value={player2Name}
-                                    placeholder="Enter your friend's name"
-                                    class="w-full p-4 bg-[#2C2C4A] border border-[#374151] rounded-xl text-white placeholder-[#9CA3AF] focus:border-[#8A2BE2] focus:outline-none transition-colors"
-                                    required
-                                />
-                            </div>
+            {/if}
+            
+            {#if isLoading}
+                <div class="mailgo-text-center py-16">
+                    <div class="mailgo-loading mx-auto mailgo-spacing-bottom-sm"></div>
+                    <p class="mailgo-text-md">Creating your game session...</p>
+                </div>
+            {:else}
+                <form on:submit|preventDefault={createSession} class="space-y-6">
+                    <div class="mailgo-grid mailgo-grid-responsive">
+                        <div class="space-y-2">
+                            <label class="mailgo-label" for="player1">
+                                Your Name
+                            </label>
+                            <input 
+                                type="text" 
+                                id="player1"
+                                bind:value={player1Name}
+                                placeholder="Enter your name"
+                                class="mailgo-input"
+                                required
+                            />
                         </div>
                         
-                        <div class="text-center mt-10">
-                            <button 
-                                type="submit"
-                                class="bg-[#8A2BE2] hover:bg-[#7C3AED] text-white font-semibold px-12 py-4 rounded-xl text-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
-                                disabled={isLoading}
-                            >
-                                Start Game →
-                            </button>
+                        <div class="space-y-2">
+                            <label class="mailgo-label" for="player2">
+                                Friend's Name
+                            </label>
+                            <input 
+                                type="text" 
+                                id="player2"
+                                bind:value={player2Name}
+                                placeholder="Enter your friend's name"
+                                class="mailgo-input"
+                                required
+                            />
                         </div>
-                    </form>
-                {/if}
+                    </div>
+                    
+                    <div class="mailgo-text-center mailgo-spacing-top-md">
+                        <button 
+                            type="submit"
+                            class="mailgo-btn mailgo-btn-primary"
+                            disabled={isLoading}
+                        >
+                            Start Game →
+                        </button>
+                    </div>
+                </form>
+            {/if}
+        </div>
+            
+        <!-- Features Grid -->
+        <div class="mailgo-grid mailgo-grid-3 mailgo-spacing-bottom-lg">
+            <div class="mailgo-card-sm mailgo-text-center mailgo-card-hover">
+                <div class="mailgo-icon-container mx-auto mailgo-spacing-bottom-sm">
+                    <span class="text-xl">❓</span>
+                </div>
+                <h3 class="mailgo-title-sm mailgo-spacing-bottom-xs">Answer Questions</h3>
+                <p class="mailgo-text-sm">Share your preferences and opinions on various topics</p>
             </div>
             
-            <!-- Features Grid -->
-            <div class="grid md:grid-cols-3 gap-8 mb-16">
-                <div class="bg-[#1A1A2E] border border-[#374151] rounded-2xl p-8 text-center hover:border-[#8A2BE2] transition-all duration-300">
-                    <div class="w-20 h-20 bg-[#8A2BE2] rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <span class="text-3xl">❓</span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-4">Answer Questions</h3>
-                    <p class="text-[#9CA3AF] leading-relaxed">Share your preferences and opinions on various topics</p>
+            <div class="mailgo-card-sm mailgo-text-center mailgo-card-hover">
+                <div class="mailgo-icon-container mx-auto mailgo-spacing-bottom-sm">
+                    <span class="text-xl">🔗</span>
                 </div>
-                
-                <div class="bg-[#1A1A2E] border border-[#374151] rounded-2xl p-8 text-center hover:border-[#8A2BE2] transition-all duration-300">
-                    <div class="w-20 h-20 bg-[#8A2BE2] rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <span class="text-3xl">🔗</span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-4">Share & Compare</h3>
-                    <p class="text-[#9CA3AF] leading-relaxed">Send the link to your friend and compare answers</p>
+                <h3 class="mailgo-title-sm mailgo-spacing-bottom-xs">Share & Compare</h3>
+                <p class="mailgo-text-sm">Send the link to your friend and compare answers</p>
+            </div>
+            
+            <div class="mailgo-card-sm mailgo-text-center mailgo-card-hover">
+                <div class="mailgo-icon-container mx-auto mailgo-spacing-bottom-sm">
+                    <span class="text-xl">💝</span>
                 </div>
-                
-                <div class="bg-[#1A1A2E] border border-[#374151] rounded-2xl p-8 text-center hover:border-[#8A2BE2] transition-all duration-300">
-                    <div class="w-20 h-20 bg-[#8A2BE2] rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        <span class="text-3xl">💝</span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-4">Get Results</h3>
-                    <p class="text-[#9CA3AF] leading-relaxed">Discover your compatibility score and shared interests</p>
-                </div>
+                <h3 class="mailgo-title-sm mailgo-spacing-bottom-xs">Get Results</h3>
+                <p class="mailgo-text-sm">Discover your compatibility score and shared interests</p>
             </div>
         </div>
     </div>

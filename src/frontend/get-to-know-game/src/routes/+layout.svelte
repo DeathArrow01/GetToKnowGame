@@ -2,7 +2,7 @@
     import '../app.css';
 </script>
 
-<main class="gradient-bg">
+<main class="mailgo-page">
     <slot />
 </main>
 
