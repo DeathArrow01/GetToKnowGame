@@ -54,9 +54,37 @@ func main() {
 
 	// Configure CORS
 	app.Use(func(c *fiber.Ctx) error {
-		c.Set("Access-Control-Allow-Origin", "http://localhost:5173")
+		// Allow multiple origins for development and production
+		origin := c.Get("Origin")
+		allowedOrigins := []string{
+			"http://localhost:5173",
+			"http://localhost:3000",
+			"https://localhost:5173",
+			"https://localhost:3000",
+		}
+		
+		// Check if origin is allowed
+		allowed := false
+		for _, allowedOrigin := range allowedOrigins {
+			if origin == allowedOrigin {
+				allowed = true
+				break
+			}
+		}
+		
+		// For production, also allow Railway domains
+		if !allowed && (origin == "" || 
+			(len(origin) > 0 && (origin[:8] == "https://" || origin[:7] == "http://"))) {
+			allowed = true
+		}
+		
+		if allowed {
+			c.Set("Access-Control-Allow-Origin", origin)
+		}
+		
 		c.Set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
 		c.Set("Access-Control-Allow-Headers", "Origin,Content-Type,Accept,Authorization")
+		c.Set("Access-Control-Allow-Credentials", "true")
 		
 		if c.Method() == "OPTIONS" {
 			return c.SendStatus(200)

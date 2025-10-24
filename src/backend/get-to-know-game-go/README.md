@@ -13,7 +13,7 @@ The application uses environment variables for configuration. You can set these 
 
 ```bash
 # MongoDB Configuration
-MONGODB_URI=mongodb://admin:password@localhost:27017
+MONGODB_URI=mongodb://***:***@localhost:27017
 DATABASE_NAME=GetToKnowGame
 
 # Server Configuration

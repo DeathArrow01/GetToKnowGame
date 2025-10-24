@@ -73,7 +73,7 @@ All endpoints match the C# backend specification:
 ## Configuration
 
 The application uses environment variables:
-- `MONGODB_URI`: MongoDB connection string (default: mongodb://admin:password@localhost:27017)
+- `MONGODB_URI`: MongoDB connection string (default: mongodb://***:***@localhost:27017)
 - `DATABASE_NAME`: Database name (default: GetToKnowGame)
 - `PORT`: Server port (default: 5012)
 - `GIN_MODE`: Gin framework mode (debug/release)
