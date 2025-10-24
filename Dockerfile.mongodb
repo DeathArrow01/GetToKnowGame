@@ -1,14 +1,27 @@
 FROM mongo:latest
 
-# Install Python for simple HTTP server
-RUN apt-get update && apt-get install -y python3 && rm -rf /var/lib/apt/lists/*
+# Install nginx for health checks
+RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
 
-# Create a simple HTTP server for health checks
+# Create nginx config for health checks
+RUN echo 'server { \
+    listen 80; \
+    location /health { \
+        return 200 "MongoDB is running"; \
+        add_header Content-Type text/plain; \
+    } \
+    location / { \
+        return 200 "MongoDB Service"; \
+        add_header Content-Type text/plain; \
+    } \
+}' > /etc/nginx/sites-available/default
+
+# Create startup script
 RUN echo '#!/bin/bash \
 # Start MongoDB in background \
 mongod --bind_ip_all --nojournal --fork --logpath /var/log/mongodb.log \
-# Simple HTTP server for health checks \
-python3 -m http.server 80' > /start.sh && chmod +x /start.sh
+# Start nginx for health checks \
+nginx -g "daemon off;"' > /start.sh && chmod +x /start.sh
 
 # Expose both MongoDB and HTTP ports
 EXPOSE 27017 80
