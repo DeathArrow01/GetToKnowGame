@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -54,8 +56,10 @@ func main() {
 
 	// Configure CORS
 	app.Use(func(c *fiber.Ctx) error {
-		// Allow multiple origins for development and production
 		origin := c.Get("Origin")
+		fmt.Printf("CORS request from origin: %s\n", origin)
+		
+		// Allow multiple origins for development and production
 		allowedOrigins := []string{
 			"http://localhost:5173",
 			"http://localhost:3000",
@@ -72,14 +76,19 @@ func main() {
 			}
 		}
 		
-		// For production, also allow Render domains
-		if !allowed && (origin == "" || 
-			(len(origin) > 0 && (origin[:8] == "https://" || origin[:7] == "http://"))) {
-			allowed = true
+		// For production, allow Render domains
+		if !allowed && origin != "" {
+			if strings.HasPrefix(origin, "https://") && strings.Contains(origin, ".onrender.com") {
+				allowed = true
+				fmt.Printf("Allowing Render domain: %s\n", origin)
+			}
 		}
 		
 		if allowed {
 			c.Set("Access-Control-Allow-Origin", origin)
+			fmt.Printf("CORS allowed for origin: %s\n", origin)
+		} else {
+			fmt.Printf("CORS denied for origin: %s\n", origin)
 		}
 		
 		c.Set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
