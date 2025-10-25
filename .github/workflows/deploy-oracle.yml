@@ -15,6 +15,7 @@ jobs:
 
       - name: Create environment file
         run: |
+          mkdir -p oracle-deploy
           echo "DOMAIN_NAME=${{ secrets.DOMAIN_NAME }}" > oracle-deploy/.env
           echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> oracle-deploy/.env
           echo "LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}" >> oracle-deploy/.env
@@ -36,7 +37,10 @@ jobs:
             curl -sL https://github.com/${{ github.repository }}/archive/${{ github.sha }}.tar.gz | tar -xz --strip-components=1
             
             # Copy environment file
-            cp oracle-deploy/.env .env
+            cp oracle-deploy/.env .env || echo "Environment file not found, creating one"
+            echo "DOMAIN_NAME=${{ secrets.DOMAIN_NAME }}" > .env
+            echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
+            echo "LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}" >> .env
             
             # Create certbot directories if they don't exist
             mkdir -p certbot/conf certbot/www
