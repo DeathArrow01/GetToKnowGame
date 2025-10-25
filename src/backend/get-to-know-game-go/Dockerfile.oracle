@@ -25,8 +25,8 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
 # Production stage
 FROM alpine:latest AS production
 
-# Install ca-certificates and timezone data
-RUN apk --no-cache add ca-certificates tzdata
+# Install ca-certificates, timezone data, and wget for health checks
+RUN apk --no-cache add ca-certificates tzdata wget
 
 # Create app user for security
 RUN addgroup -g 1001 -S appgroup
