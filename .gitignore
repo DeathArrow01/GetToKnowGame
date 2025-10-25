@@ -129,7 +129,6 @@ packages/
 
 # Documentation files (keep local only)
 DOCKER_SETUP_SUMMARY.md
-RENDER_DEPLOYMENT.md
 
 # Environment files (keep local only)
 mongodb.env
