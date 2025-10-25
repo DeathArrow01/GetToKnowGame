@@ -36,17 +36,31 @@ jobs:
             # Download and extract latest code
             curl -sL https://github.com/${{ github.repository }}/archive/${{ github.sha }}.tar.gz | tar -xz --strip-components=1
             
-            # Copy environment file
-            cp oracle-deploy/.env .env || echo "Environment file not found, creating one"
+            # Create environment file with proper values
             echo "DOMAIN_NAME=${{ secrets.DOMAIN_NAME }}" > .env
             echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
             echo "LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}" >> .env
+            
+            # Verify environment file was created
+            echo "Environment file contents:"
+            cat .env
             
             # Create certbot directories if they don't exist
             mkdir -p certbot/conf certbot/www
             
             # Stop existing containers
             docker-compose -f oracle-deploy/docker-compose.yml down || true
+            
+            # Debug: Check if environment variables are set
+            echo "Checking environment variables:"
+            echo "DOMAIN_NAME: $DOMAIN_NAME"
+            echo "MONGODB_URI: $MONGODB_URI"
+            echo "LETSENCRYPT_EMAIL: $LETSENCRYPT_EMAIL"
+            
+            # Export environment variables for docker-compose
+            export DOMAIN_NAME="${{ secrets.DOMAIN_NAME }}"
+            export MONGODB_URI="${{ secrets.MONGODB_URI }}"
+            export LETSENCRYPT_EMAIL="${{ secrets.LETSENCRYPT_EMAIL }}"
             
             # Pull latest images and build
             docker-compose -f oracle-deploy/docker-compose.yml pull

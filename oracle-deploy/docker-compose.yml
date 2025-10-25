@@ -8,6 +8,8 @@ services:
     restart: unless-stopped
     expose:
       - "3000"
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
       - VITE_API_URL=https://api.${DOMAIN_NAME}
@@ -17,6 +19,8 @@ services:
       context: ../src/backend/get-to-know-game-go
       dockerfile: Dockerfile.oracle
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       - MONGODB_URI=${MONGODB_URI}
       - PORT=8080
