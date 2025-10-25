@@ -69,10 +69,22 @@ jobs:
             echo "MONGODB_URI: $MONGODB_URI"
             echo "LETSENCRYPT_EMAIL: $LETSENCRYPT_EMAIL"
             
+            # Verify .env file contents
+            echo "Environment file contents:"
+            cat .env
+            
             # Export environment variables for docker-compose
             export DOMAIN_NAME="${{ secrets.DOMAIN_NAME }}"
             export MONGODB_URI="${{ secrets.MONGODB_URI }}"
             export LETSENCRYPT_EMAIL="${{ secrets.LETSENCRYPT_EMAIL }}"
+            
+            # Test MongoDB connection (basic validation)
+            echo "Testing MongoDB URI format..."
+            if [[ "$MONGODB_URI" == mongodb+srv://* ]]; then
+                echo "✅ MongoDB URI format looks correct (Atlas)"
+            else
+                echo "⚠️ MongoDB URI format might be incorrect"
+            fi
             
             # Pull latest images and build
             echo "Pulling latest images..."
@@ -102,7 +114,10 @@ jobs:
             # Check if backend is healthy
             if ! docker-compose ps | grep -q "backend.*Up"; then
               echo "❌ Backend container failed to start"
+              echo "Backend logs:"
               docker-compose logs backend
+              echo "Checking MongoDB connection specifically..."
+              docker-compose exec backend env | grep MONGODB_URI || echo "MONGODB_URI not found in container"
               exit 1
             fi
             

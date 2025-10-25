@@ -23,6 +23,7 @@ services:
       - .env
     environment:
       - MONGODB_URI=${MONGODB_URI}
+      - DATABASE_NAME=GetToKnowGame
       - PORT=8080
       - GIN_MODE=release
     expose:
@@ -35,7 +36,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-basic.conf:/etc/nginx/nginx.conf:ro
       - ./certbot/conf:/etc/letsencrypt:ro
       - ./certbot/www:/var/www/certbot:ro
     depends_on:
