@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"crypto/tls"
 	"log"
 	"time"
 
@@ -20,22 +19,23 @@ type MongoDB struct {
 
 // NewMongoDB creates a new MongoDB connection
 func NewMongoDB(cfg *config.Config) (*MongoDB, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	// Configure TLS for MongoDB Atlas
-	tlsConfig := &tls.Config{
-		InsecureSkipVerify: false,
-	}
+	log.Printf("Attempting to connect to MongoDB with URI: %s", cfg.MongoURI)
 
+	// Configure client options with extended timeouts
 	clientOptions := options.Client().
 		ApplyURI(cfg.MongoURI).
-		SetTLSConfig(tlsConfig).
 		SetServerSelectionTimeout(30 * time.Second).
-		SetSocketTimeout(30 * time.Second)
+		SetSocketTimeout(30 * time.Second).
+		SetConnectTimeout(30 * time.Second).
+		SetMaxPoolSize(10).
+		SetMinPoolSize(1)
 
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
+		log.Printf("Failed to connect to MongoDB: %v", err)
 		return nil, err
 	}
 
