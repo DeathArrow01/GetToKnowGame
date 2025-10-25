@@ -36,20 +36,28 @@ jobs:
             # Download and extract latest code
             curl -sL https://github.com/${{ github.repository }}/archive/${{ github.sha }}.tar.gz | tar -xz --strip-components=1
             
-            # Create environment file with proper values
+            # Create environment file with proper values in oracle-deploy directory
+            echo "DOMAIN_NAME=${{ secrets.DOMAIN_NAME }}" > oracle-deploy/.env
+            echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> oracle-deploy/.env
+            echo "LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}" >> oracle-deploy/.env
+            
+            # Also create in root directory for docker-compose
             echo "DOMAIN_NAME=${{ secrets.DOMAIN_NAME }}" > .env
             echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
             echo "LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}" >> .env
             
             # Verify environment file was created
             echo "Environment file contents:"
-            cat .env
+            cat oracle-deploy/.env
             
             # Create certbot directories if they don't exist
             mkdir -p certbot/conf certbot/www
             
+            # Change to oracle-deploy directory for docker-compose
+            cd oracle-deploy
+            
             # Stop existing containers
-            docker-compose -f oracle-deploy/docker-compose.yml down || true
+            docker-compose down || true
             
             # Debug: Check if environment variables are set
             echo "Checking environment variables:"
@@ -63,8 +71,8 @@ jobs:
             export LETSENCRYPT_EMAIL="${{ secrets.LETSENCRYPT_EMAIL }}"
             
             # Pull latest images and build
-            docker-compose -f oracle-deploy/docker-compose.yml pull
-            docker-compose -f oracle-deploy/docker-compose.yml up -d --build
+            docker-compose pull
+            docker-compose up -d --build
             
             # Clean up unused Docker resources
             docker system prune -f
@@ -73,17 +81,17 @@ jobs:
             sleep 30
             
             # Check if SSL certificates exist, if not, generate them
-            if [ ! -f "certbot/conf/live/${{ secrets.DOMAIN_NAME }}/fullchain.pem" ]; then
+            if [ ! -f "../certbot/conf/live/${{ secrets.DOMAIN_NAME }}/fullchain.pem" ]; then
               echo "Generating SSL certificates for ${{ secrets.DOMAIN_NAME }}"
               
               # Start nginx temporarily for certificate generation
-              docker-compose -f oracle-deploy/docker-compose.yml up -d nginx
+              docker-compose up -d nginx
               
               # Wait for nginx to be ready
               sleep 10
               
               # Generate certificates
-              docker-compose -f oracle-deploy/docker-compose.yml exec -T certbot certbot certonly \
+              docker-compose exec -T certbot certbot certonly \
                 --webroot \
                 --webroot-path=/var/www/certbot \
                 --email ${{ secrets.LETSENCRYPT_EMAIL }} \
@@ -93,14 +101,14 @@ jobs:
                 -d api.${{ secrets.DOMAIN_NAME }}
               
               # Restart nginx with SSL
-              docker-compose -f oracle-deploy/docker-compose.yml restart nginx
+              docker-compose restart nginx
             else
               echo "SSL certificates already exist, skipping generation"
             fi
             
             # Show deployment status
             echo "Deployment completed successfully!"
-            docker-compose -f oracle-deploy/docker-compose.yml ps
+            docker-compose ps
 
       - name: Notify deployment status
         if: always()
