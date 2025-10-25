@@ -1,8 +1,13 @@
-const API_BASE_URL = 'http://localhost:5012/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5012/api';
+
+console.log('Environment VITE_API_URL:', import.meta.env.VITE_API_URL);
+console.log('Using API_BASE_URL:', API_BASE_URL);
 
 class ApiService {
     async request(endpoint, options = {}) {
         const url = `${API_BASE_URL}${endpoint}`;
+        console.log('API Request:', url, options.method || 'GET');
+        
         const config = {
             headers: {
                 'Content-Type': 'application/json',
