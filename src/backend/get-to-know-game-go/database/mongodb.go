@@ -9,6 +9,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 // MongoDB holds the database connection
@@ -24,9 +25,13 @@ func NewMongoDB(cfg *config.Config) (*MongoDB, error) {
 
 	log.Printf("Attempting to connect to MongoDB with URI: %s", cfg.MongoURI)
 
-	// Configure client options with extended timeouts
+	// Use the SetServerAPIOptions() method to set the version of the Stable API on the client
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	
+	// Configure client options with ServerAPI and extended timeouts
 	clientOptions := options.Client().
 		ApplyURI(cfg.MongoURI).
+		SetServerAPIOptions(serverAPI).
 		SetServerSelectionTimeout(30 * time.Second).
 		SetSocketTimeout(30 * time.Second).
 		SetConnectTimeout(30 * time.Second).
@@ -39,9 +44,10 @@ func NewMongoDB(cfg *config.Config) (*MongoDB, error) {
 		return nil, err
 	}
 
-	// Test the connection
-	err = client.Ping(ctx, nil)
+	// Test the connection using readpref.Primary() as recommended by Atlas
+	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
+		log.Printf("Failed to ping MongoDB: %v", err)
 		return nil, err
 	}
 
