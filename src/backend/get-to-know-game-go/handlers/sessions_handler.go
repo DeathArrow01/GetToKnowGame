@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"get-to-know-game-go/models"
 	"get-to-know-game-go/repositories"
 	"get-to-know-game-go/services"
@@ -37,10 +38,13 @@ func (h *SessionsHandler) CreateSession(c *fiber.Ctx) error {
 
 	// Create Player 1
 	player1 := models.Player{Name: req.Player1Name}
+	fmt.Printf("Creating Player 1: %s\n", req.Player1Name)
 	createdPlayer1, err := h.playerRepo.Create(c.Context(), player1)
 	if err != nil {
+		fmt.Printf("Error creating Player 1: %v\n", err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to create player 1"})
 	}
+	fmt.Printf("Player 1 created successfully with ID: %s\n", createdPlayer1.ID.Hex())
 
 	// Create GameSession
 	session := models.GameSession{
@@ -49,10 +53,13 @@ func (h *SessionsHandler) CreateSession(c *fiber.Ctx) error {
 		Player2Name:    &req.Player2Name,
 	}
 
+	fmt.Printf("Creating GameSession for Player 1: %s\n", createdPlayer1.ID.Hex())
 	createdSession, err := h.sessionRepo.Create(c.Context(), session)
 	if err != nil {
+		fmt.Printf("Error creating GameSession: %v\n", err)
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to create session"})
 	}
+	fmt.Printf("GameSession created successfully with ID: %s\n", createdSession.ID.Hex())
 
 	response := fiber.Map{
 		"sessionId": createdSession.ID.Hex(),

@@ -24,10 +24,17 @@ func NewBaseRepository[T any](collection *mongo.Collection) *BaseRepository[T] {
 // Create inserts a new document
 func (r *BaseRepository[T]) Create(ctx context.Context, entity T) (T, error) {
 	var zero T
+	
+	// Log the collection name and entity being created
+	fmt.Printf("Creating document in collection: %s\n", r.collection.Name())
+	
 	result, err := r.collection.InsertOne(ctx, entity)
 	if err != nil {
+		fmt.Printf("Error inserting document: %v\n", err)
 		return zero, err
 	}
+
+	fmt.Printf("Document inserted successfully with ID: %v\n", result.InsertedID)
 
 	// Get the created document with the generated ID
 	if objectID, ok := result.InsertedID.(primitive.ObjectID); ok {
@@ -35,8 +42,10 @@ func (r *BaseRepository[T]) Create(ctx context.Context, entity T) (T, error) {
 		var createdEntity T
 		err = r.collection.FindOne(ctx, bson.M{"_id": objectID}).Decode(&createdEntity)
 		if err != nil {
+			fmt.Printf("Error fetching created document: %v\n", err)
 			return zero, err
 		}
+		fmt.Printf("Document fetched successfully\n")
 		return createdEntity, nil
 	}
 
