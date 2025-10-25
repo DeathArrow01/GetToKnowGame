@@ -127,7 +127,7 @@ obj/
 packages/
 !packages/build/
 
-# Documentation files (keep local only)
+# Documentation files (keep local only - contains sensitive deployment info)
 DOCKER_SETUP_SUMMARY.md
 ORACLE_DEPLOYMENT.md
 
