@@ -65,6 +65,7 @@ func main() {
 			"http://localhost:3000",
 			"https://localhost:5173",
 			"https://localhost:3000",
+			"https://pairglow.com",  // Production domain
 		}
 		
 		// Check if origin is allowed
@@ -130,8 +131,8 @@ func main() {
 	
 	log.Println("Routes registered successfully")
 
-	// Health check endpoint
-	app.Get("/health", func(c *fiber.Ctx) error {
+	// Health check endpoint (inside API group for consistency)
+	api.Get("/health", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"status": "ok"})
 	})
 
