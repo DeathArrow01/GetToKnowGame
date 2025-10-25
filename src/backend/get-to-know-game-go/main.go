@@ -118,6 +118,8 @@ func main() {
 	sessions.Post("/:sessionId/join", sessionsHandler.JoinSession)
 	sessions.Put("/:sessionId/answers", sessionsHandler.SubmitAnswers)
 	sessions.Delete("/:sessionId", sessionsHandler.DeleteSession)
+	
+	log.Println("Routes registered successfully")
 
 	// Health check endpoint
 	app.Get("/health", func(c *fiber.Ctx) error {

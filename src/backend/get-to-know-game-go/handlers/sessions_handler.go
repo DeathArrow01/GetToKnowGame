@@ -31,10 +31,15 @@ func NewSessionsHandler(
 
 // CreateSession handles POST /api/sessions
 func (h *SessionsHandler) CreateSession(c *fiber.Ctx) error {
+	fmt.Printf("=== CreateSession endpoint called ===\n")
+	
 	var req models.CreateSessionRequest
 	if err := c.BodyParser(&req); err != nil {
+		fmt.Printf("Error parsing request body: %v\n", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body"})
 	}
+	
+	fmt.Printf("Request parsed successfully: Player1Name=%s, Player2Name=%s\n", req.Player1Name, req.Player2Name)
 
 	// Create Player 1
 	player1 := models.Player{Name: req.Player1Name}
