@@ -1,0 +1,94 @@
+name: Deploy to Oracle Cloud AMD VM
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create environment file
+        run: |
+          echo "DOMAIN_NAME=${{ secrets.DOMAIN_NAME }}" > oracle-deploy/.env
+          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> oracle-deploy/.env
+          echo "LETSENCRYPT_EMAIL=${{ secrets.LETSENCRYPT_EMAIL }}" >> oracle-deploy/.env
+
+      - name: Deploy to Oracle VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.ORACLE_VM_IP }}
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Navigate to app directory
+            cd /home/ubuntu/get-to-know-game || mkdir -p /home/ubuntu/get-to-know-game && cd /home/ubuntu/get-to-know-game
+            
+            # Clean previous deployment
+            rm -rf * .[^.]* 2>/dev/null || true
+            
+            # Download and extract latest code
+            curl -sL https://github.com/${{ github.repository }}/archive/${{ github.sha }}.tar.gz | tar -xz --strip-components=1
+            
+            # Copy environment file
+            cp oracle-deploy/.env .env
+            
+            # Create certbot directories if they don't exist
+            mkdir -p certbot/conf certbot/www
+            
+            # Stop existing containers
+            docker-compose -f oracle-deploy/docker-compose.yml down || true
+            
+            # Pull latest images and build
+            docker-compose -f oracle-deploy/docker-compose.yml pull
+            docker-compose -f oracle-deploy/docker-compose.yml up -d --build
+            
+            # Clean up unused Docker resources
+            docker system prune -f
+            
+            # Wait for services to be ready
+            sleep 30
+            
+            # Check if SSL certificates exist, if not, generate them
+            if [ ! -f "certbot/conf/live/${{ secrets.DOMAIN_NAME }}/fullchain.pem" ]; then
+              echo "Generating SSL certificates for ${{ secrets.DOMAIN_NAME }}"
+              
+              # Start nginx temporarily for certificate generation
+              docker-compose -f oracle-deploy/docker-compose.yml up -d nginx
+              
+              # Wait for nginx to be ready
+              sleep 10
+              
+              # Generate certificates
+              docker-compose -f oracle-deploy/docker-compose.yml exec -T certbot certbot certonly \
+                --webroot \
+                --webroot-path=/var/www/certbot \
+                --email ${{ secrets.LETSENCRYPT_EMAIL }} \
+                --agree-tos \
+                --no-eff-email \
+                -d ${{ secrets.DOMAIN_NAME }} \
+                -d api.${{ secrets.DOMAIN_NAME }}
+              
+              # Restart nginx with SSL
+              docker-compose -f oracle-deploy/docker-compose.yml restart nginx
+            else
+              echo "SSL certificates already exist, skipping generation"
+            fi
+            
+            # Show deployment status
+            echo "Deployment completed successfully!"
+            docker-compose -f oracle-deploy/docker-compose.yml ps
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment successful! Your app is live at https://${{ secrets.DOMAIN_NAME }}"
+          else
+            echo "❌ Deployment failed. Check the logs above for details."
+          fi
