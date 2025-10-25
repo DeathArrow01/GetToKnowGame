@@ -5,6 +5,8 @@ services:
     build:
       context: ../src/frontend/get-to-know-game
       dockerfile: Dockerfile.oracle
+      args:
+        - VITE_API_URL=https://pairglow.com/api
     restart: unless-stopped
     expose:
       - "3000"
@@ -12,7 +14,6 @@ services:
       - .env
     environment:
       - NODE_ENV=production
-      - VITE_API_URL=https://pairglow.com/api
 
   backend:
     build:
