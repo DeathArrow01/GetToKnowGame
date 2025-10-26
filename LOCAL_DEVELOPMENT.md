@@ -58,7 +58,7 @@ Once everything is running, you can access:
 To access the admin dashboard:
 
 1. **Set up authentication** using a browser extension like ModHeader
-2. **Add header**: `Authorization: Bearer your-super-secret-admin-key-change-this`
+2. **Add header**: `Authorization: Bearer my-secure-admin-key-2024`
 3. **Navigate to**: http://localhost:5173/admin
 
 ## Development Commands
@@ -213,7 +213,7 @@ curl http://localhost:5012/api/questions
 ### Test Admin Endpoints
 ```bash
 # Get admin stats (requires admin key in header)
-curl -H "Authorization: Bearer your-super-secret-admin-key-change-this" \
+curl -H "Authorization: Bearer my-secure-admin-key-2024" \
      http://localhost:5012/api/admin/stats
 ```
 

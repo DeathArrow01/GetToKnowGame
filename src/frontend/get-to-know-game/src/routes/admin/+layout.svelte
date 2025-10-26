@@ -12,22 +12,7 @@
     $: currentPath = $page.url.pathname;
     
     onMount(async () => {
-        // Try to get admin key from URL params first (for testing)
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlKey = urlParams.get('admin_key');
-        
-        if (urlKey) {
-            adminKey = urlKey;
-            adminApi.setAdminKey(urlKey);
-            isAuthenticated = true;
-            // Store in localStorage for future use
-            localStorage.setItem('admin_key', urlKey);
-            // Clean URL
-            window.history.replaceState({}, document.title, window.location.pathname);
-            return;
-        }
-        
-        // Check localStorage
+        // Check localStorage for stored admin key
         const stored = localStorage.getItem('admin_key');
         if (stored) {
             adminKey = stored;
