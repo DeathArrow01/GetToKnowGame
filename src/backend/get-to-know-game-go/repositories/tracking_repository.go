@@ -6,27 +6,27 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"get-to-know-game-go/models"
 )
 
-// TrackingRepository handles tracking event operations
-type TrackingRepository struct {
+// TrackingRepositoryImpl handles tracking event operations
+type TrackingRepositoryImpl struct {
 	*BaseRepository[models.TrackingEvent]
 }
 
 // NewTrackingRepository creates a new tracking repository
-func NewTrackingRepository(collection *mongo.Collection) *TrackingRepository {
-	return &TrackingRepository{
+func NewTrackingRepository(collection *mongo.Collection) TrackingRepository {
+	return &TrackingRepositoryImpl{
 		BaseRepository: NewBaseRepository[models.TrackingEvent](collection),
 	}
 }
 
 
 // GetUniqueVisitors returns the count of unique player IDs
-func (r *TrackingRepository) GetUniqueVisitors(ctx context.Context) (int64, error) {
+func (r *TrackingRepositoryImpl) GetUniqueVisitors(ctx context.Context) (int64, error) {
 	pipeline := []bson.M{
 		{"$group": bson.M{"_id": "$playerId"}},
 		{"$count": "uniqueVisitors"},
@@ -55,7 +55,7 @@ func (r *TrackingRepository) GetUniqueVisitors(ctx context.Context) (int64, erro
 }
 
 // GetEventCounts returns aggregated event counts
-func (r *TrackingRepository) GetEventCounts(ctx context.Context) (map[string]int64, error) {
+func (r *TrackingRepositoryImpl) GetEventCounts(ctx context.Context) (map[string]int64, error) {
 	pipeline := []bson.M{
 		{"$group": bson.M{
 			"_id":   "$event",
@@ -88,7 +88,7 @@ func (r *TrackingRepository) GetEventCounts(ctx context.Context) (map[string]int
 
 
 // GetVisitorStatsByPeriod returns visitor statistics for a specific time period
-func (r *TrackingRepository) GetVisitorStatsByPeriod(ctx context.Context, period string) ([]models.VisitorStats, error) {
+func (r *TrackingRepositoryImpl) GetVisitorStatsByPeriod(ctx context.Context, period string) ([]models.VisitorStats, error) {
 	var startDate time.Time
 	var groupFormat string
 
@@ -205,12 +205,12 @@ func (r *TrackingRepository) GetVisitorStatsByPeriod(ctx context.Context, period
 }
 
 // GetTotalPageViews returns the total number of page views
-func (r *TrackingRepository) GetTotalPageViews(ctx context.Context) (int64, error) {
+func (r *TrackingRepositoryImpl) GetTotalPageViews(ctx context.Context) (int64, error) {
 	return r.CountWithFilter(ctx, bson.M{"event": "page_view"})
 }
 
 // GetFilteredEvents returns tracking events with advanced filtering
-func (r *TrackingRepository) GetFilteredEvents(ctx context.Context, filter models.AnalyticsFilter) ([]models.TrackingEvent, error) {
+func (r *TrackingRepositoryImpl) GetFilteredEvents(ctx context.Context, filter models.AnalyticsFilter) ([]models.TrackingEvent, error) {
 	mongoFilter := bson.M{}
 
 	// Date range filtering
@@ -243,15 +243,17 @@ func (r *TrackingRepository) GetFilteredEvents(ctx context.Context, filter model
 	}
 
 	// Set up options
-	opts := &mongo.FindOptions{
+	opts := &options.FindOptions{
 		Sort: bson.M{"time": -1},
 	}
 
 	if filter.Limit > 0 {
-		opts.Limit = int64(filter.Limit)
+		limitInt64 := int64(filter.Limit)
+		opts.Limit = &limitInt64
 	}
 	if filter.Offset > 0 {
-		opts.Skip = int64(filter.Offset)
+		skipInt64 := int64(filter.Offset)
+		opts.Skip = &skipInt64
 	}
 
 	cursor, err := r.collection.Find(ctx, mongoFilter, opts)
@@ -269,7 +271,7 @@ func (r *TrackingRepository) GetFilteredEvents(ctx context.Context, filter model
 }
 
 // GetGeographicData returns location-based analytics
-func (r *TrackingRepository) GetGeographicData(ctx context.Context) ([]models.GeographicData, error) {
+func (r *TrackingRepositoryImpl) GetGeographicData(ctx context.Context) ([]models.GeographicData, error) {
 	// This is a simplified implementation
 	// In a real implementation, you would use IP geolocation services
 	// For now, we'll return mock data structure
@@ -316,9 +318,9 @@ func (r *TrackingRepository) GetGeographicData(ctx context.Context) ([]models.Ge
 			City:         "Unknown",
 			Latitude:     0.0,
 			Longitude:    0.0,
-			UserCount:    result["userCount"].(int32),
-			SessionCount: result["sessionCount"].(int32),
-			PageViews:    result["pageViews"].(int32),
+			UserCount:    int64(result["userCount"].(int32)),
+			SessionCount: int64(result["sessionCount"].(int32)),
+			PageViews:    int64(result["pageViews"].(int32)),
 		})
 	}
 
@@ -326,7 +328,7 @@ func (r *TrackingRepository) GetGeographicData(ctx context.Context) ([]models.Ge
 }
 
 // GetPerformanceMetrics returns system performance data
-func (r *TrackingRepository) GetPerformanceMetrics(ctx context.Context) (*models.PerformanceMetrics, error) {
+func (r *TrackingRepositoryImpl) GetPerformanceMetrics(ctx context.Context) (*models.PerformanceMetrics, error) {
 	// This is a simplified implementation
 	// In a real implementation, you would collect actual system metrics
 	

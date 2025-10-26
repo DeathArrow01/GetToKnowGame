@@ -2,6 +2,9 @@ package handlers
 
 import (
 	"fmt"
+	"log"
+	"time"
+
 	"get-to-know-game-go/models"
 	"get-to-know-game-go/repositories"
 	"get-to-know-game-go/services"
@@ -60,6 +63,7 @@ func (h *SessionsHandler) CreateSession(c *fiber.Ctx) error {
 	// Create GameSession
 	session := models.GameSession{
 		Player1ID:      createdPlayer1.ID,
+		Player1Name:    req.Player1Name,
 		Player1Answers: []models.PlayerAnswer{},
 		Player2Name:    &req.Player2Name,
 		CreatedAt:      time.Now(),

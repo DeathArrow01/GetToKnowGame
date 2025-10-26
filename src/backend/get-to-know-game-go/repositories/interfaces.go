@@ -49,4 +49,7 @@ type TrackingRepository interface {
 	GetEventCounts(ctx context.Context) (map[string]int64, error)
 	GetVisitorStatsByPeriod(ctx context.Context, period string) ([]models.VisitorStats, error)
 	GetTotalPageViews(ctx context.Context) (int64, error)
+	GetFilteredEvents(ctx context.Context, filter models.AnalyticsFilter) ([]models.TrackingEvent, error)
+	GetGeographicData(ctx context.Context) ([]models.GeographicData, error)
+	GetPerformanceMetrics(ctx context.Context) (*models.PerformanceMetrics, error)
 }

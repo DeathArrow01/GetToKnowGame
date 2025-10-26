@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // GameSessionRepositoryImpl implements GameSessionRepository
@@ -107,9 +108,10 @@ func (r *GameSessionRepositoryImpl) UpdatePlayer2(ctx context.Context, id string
 
 // GetRecentSessions retrieves recent sessions with all data
 func (r *GameSessionRepositoryImpl) GetRecentSessions(ctx context.Context, limit int) ([]models.SessionAnalytics, error) {
-	opts := &mongo.FindOptions{
+	limitInt64 := int64(limit)
+	opts := &options.FindOptions{
 		Sort:  bson.M{"createdAt": -1},
-		Limit: int64(limit),
+		Limit: &limitInt64,
 	}
 
 	cursor, err := r.collection.Find(ctx, bson.M{}, opts)
@@ -126,10 +128,16 @@ func (r *GameSessionRepositoryImpl) GetRecentSessions(ctx context.Context, limit
 	// Convert to SessionAnalytics
 	var analytics []models.SessionAnalytics
 	for _, session := range sessions {
+		var player2ID *string
+		if session.Player2ID != nil {
+			id := session.Player2ID.Hex()
+			player2ID = &id
+		}
+
 		analytics = append(analytics, models.SessionAnalytics{
 			SessionID:   session.ID.Hex(),
 			Player1ID:   session.Player1ID.Hex(),
-			Player2ID:   session.Player2ID,
+			Player2ID:   player2ID,
 			CreatedAt:   session.CreatedAt,
 			CompletedAt: session.CompletedAt,
 			Score:       session.CompatibilityScore,

@@ -27,7 +27,7 @@ export {};
 
 declare module "$app/types" {
 	export interface AppTypes {
-		RouteId(): "/" | "/session" | "/session/[sessionId]" | "/session/[sessionId]/completion" | "/session/[sessionId]/questions" | "/session/[sessionId]/results";
+		RouteId(): "/" | "/admin" | "/admin/analytics" | "/admin/performance" | "/admin/questions" | "/admin/sections" | "/admin/sessions" | "/session" | "/session/[sessionId]" | "/session/[sessionId]/completion" | "/session/[sessionId]/questions" | "/session/[sessionId]/results";
 		RouteParams(): {
 			"/session/[sessionId]": { sessionId: string };
 			"/session/[sessionId]/completion": { sessionId: string };
@@ -36,13 +36,19 @@ declare module "$app/types" {
 		};
 		LayoutParams(): {
 			"/": { sessionId?: string };
+			"/admin": Record<string, never>;
+			"/admin/analytics": Record<string, never>;
+			"/admin/performance": Record<string, never>;
+			"/admin/questions": Record<string, never>;
+			"/admin/sections": Record<string, never>;
+			"/admin/sessions": Record<string, never>;
 			"/session": { sessionId?: string };
 			"/session/[sessionId]": { sessionId: string };
 			"/session/[sessionId]/completion": { sessionId: string };
 			"/session/[sessionId]/questions": { sessionId: string };
 			"/session/[sessionId]/results": { sessionId: string }
 		};
-		Pathname(): "/" | "/session" | "/session/" | `/session/${string}` & {} | `/session/${string}/` & {} | `/session/${string}/completion` & {} | `/session/${string}/completion/` & {} | `/session/${string}/questions` & {} | `/session/${string}/questions/` & {} | `/session/${string}/results` & {} | `/session/${string}/results/` & {};
+		Pathname(): "/" | "/admin" | "/admin/" | "/admin/analytics" | "/admin/analytics/" | "/admin/performance" | "/admin/performance/" | "/admin/questions" | "/admin/questions/" | "/admin/sections" | "/admin/sections/" | "/admin/sessions" | "/admin/sessions/" | "/session" | "/session/" | `/session/${string}` & {} | `/session/${string}/` & {} | `/session/${string}/completion` & {} | `/session/${string}/completion/` & {} | `/session/${string}/questions` & {} | `/session/${string}/questions/` & {} | `/session/${string}/results` & {} | `/session/${string}/results/` & {};
 		ResolvedPathname(): `${"" | `/${string}`}${ReturnType<AppTypes['Pathname']>}`;
 		Asset(): string & {};
 	}

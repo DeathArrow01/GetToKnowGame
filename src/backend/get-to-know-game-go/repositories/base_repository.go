@@ -133,11 +133,11 @@ func (r *BaseRepository[T]) Count(ctx context.Context) (int64, error) {
 }
 
 // CountWithFilter returns the number of documents matching the filter
-func (r *BaseRepository[T]) CountWithFilter(ctx context.Context, filter bson.M) (int64, error) {
+func (r *BaseRepository[T]) CountWithFilter(ctx context.Context, filter interface{}) (int64, error) {
 	return r.collection.CountDocuments(ctx, filter)
 }
 
 // Aggregate performs an aggregation pipeline on the collection
-func (r *BaseRepository[T]) Aggregate(ctx context.Context, pipeline []bson.M) (*mongo.Cursor, error) {
+func (r *BaseRepository[T]) Aggregate(ctx context.Context, pipeline interface{}) (interface{}, error) {
 	return r.collection.Aggregate(ctx, pipeline)
 }

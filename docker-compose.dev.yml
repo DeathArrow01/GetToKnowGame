@@ -38,7 +38,7 @@ services:
       - app-network
     volumes:
       - ./src/backend/get-to-know-game-go:/app
-    command: ["go", "run", "main.go"]
+    command: ["./main"]
 
 volumes:
   mongodb_data_dev:
