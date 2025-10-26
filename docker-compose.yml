@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: get-to-know-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: GetToKnowGame
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongodb-init.js:/docker-entrypoint-initdb.d/mongodb-init.js:ro
+    networks:
+      - app-network
+
+  # Go Backend
+  backend:
+    build:
+      context: ./src/backend/get-to-know-game-go
+      dockerfile: Dockerfile
+    container_name: get-to-know-backend
+    restart: unless-stopped
+    ports:
+      - "5012:5012"
+    environment:
+      MONGODB_URI: mongodb://admin:password@mongodb:27017/GetToKnowGame?authSource=admin
+      ADMIN_KEY: your-super-secret-admin-key-change-this
+      TRACKING_ENABLED: "true"
+      PORT: "5012"
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5012/api/questions"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # SvelteKit Frontend
+  frontend:
+    build:
+      context: ./src/frontend/get-to-know-game
+      dockerfile: Dockerfile
+    container_name: get-to-know-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    environment:
+      VITE_API_URL: http://localhost:5012/api
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # Nginx Reverse Proxy (Optional - for production-like setup)
+  nginx:
+    image: nginx:alpine
+    container_name: get-to-know-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

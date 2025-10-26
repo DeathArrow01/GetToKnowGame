@@ -1,6 +1,10 @@
 package models
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 // GameSession represents a game session between two players
 type GameSession struct {
@@ -11,4 +15,7 @@ type GameSession struct {
 	Player2Answers     *[]PlayerAnswer    `bson:"player2Answers,omitempty" json:"player2Answers,omitempty"`
 	CompatibilityScore *int               `bson:"compatibilityScore,omitempty" json:"compatibilityScore,omitempty"`
 	Player2Name        *string            `bson:"player2Name,omitempty" json:"player2Name,omitempty"`
+	CreatedAt          time.Time          `bson:"createdAt" json:"createdAt"`
+	CompletedAt        *time.Time         `bson:"completedAt,omitempty" json:"completedAt,omitempty"`
+	IPAddress          string             `bson:"ipAddress" json:"ipAddress"`
 }

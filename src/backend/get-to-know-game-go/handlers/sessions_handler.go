@@ -51,11 +51,19 @@ func (h *SessionsHandler) CreateSession(c *fiber.Ctx) error {
 	}
 	fmt.Printf("Player 1 created successfully with ID: %s\n", createdPlayer1.ID.Hex())
 
+	// Get IP address
+	ip := c.IP()
+	if forwarded := c.Get("X-Forwarded-For"); forwarded != "" {
+		ip = forwarded
+	}
+
 	// Create GameSession
 	session := models.GameSession{
 		Player1ID:      createdPlayer1.ID,
 		Player1Answers: []models.PlayerAnswer{},
 		Player2Name:    &req.Player2Name,
+		CreatedAt:      time.Now(),
+		IPAddress:      ip,
 	}
 
 	fmt.Printf("Creating GameSession for Player 1: %s\n", createdPlayer1.ID.Hex())
@@ -198,6 +206,13 @@ func (h *SessionsHandler) SubmitAnswers(c *fiber.Ctx) error {
 			err = h.sessionRepo.UpdateCompatibilityScore(c.Context(), sessionID, score)
 			if err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to update compatibility score"})
+			}
+
+			// Set completion timestamp
+			err = h.sessionRepo.UpdateCompletedAt(c.Context(), sessionID, time.Now())
+			if err != nil {
+				log.Printf("Warning: Failed to update completion timestamp: %v", err)
+				// Don't fail the request for this
 			}
 		}
 	}

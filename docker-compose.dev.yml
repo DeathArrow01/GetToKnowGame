@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: get-to-know-mongodb-dev
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: GetToKnowGame
+    volumes:
+      - mongodb_data_dev:/data/db
+      - ./mongodb-init.js:/docker-entrypoint-initdb.d/mongodb-init.js:ro
+    networks:
+      - app-network
+
+  # Go Backend
+  backend:
+    build:
+      context: ./src/backend/get-to-know-game-go
+      dockerfile: Dockerfile
+    container_name: get-to-know-backend-dev
+    restart: unless-stopped
+    ports:
+      - "5012:5012"
+    environment:
+      MONGODB_URI: mongodb://admin:password@mongodb:27017/GetToKnowGame?authSource=admin
+      ADMIN_KEY: your-super-secret-admin-key-change-this
+      TRACKING_ENABLED: "true"
+      PORT: "5012"
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    volumes:
+      - ./src/backend/get-to-know-game-go:/app
+    command: ["go", "run", "main.go"]
+
+volumes:
+  mongodb_data_dev:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge

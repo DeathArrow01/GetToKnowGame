@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"get-to-know-game-go/models"
 
@@ -93,6 +94,95 @@ func (r *GameSessionRepositoryImpl) UpdatePlayer2(ctx context.Context, id string
 
 	update := bson.M{"$set": bson.M{"player2Id": player2ID}}
 	result, err := r.BaseRepository.collection.UpdateOne(ctx, bson.M{"_id": objectID}, update)
+	if err != nil {
+		return err
+	}
+
+	if result.MatchedCount == 0 {
+		return fmt.Errorf("session not found")
+	}
+
+	return nil
+}
+
+// GetRecentSessions retrieves recent sessions with all data
+func (r *GameSessionRepositoryImpl) GetRecentSessions(ctx context.Context, limit int) ([]models.SessionAnalytics, error) {
+	opts := &mongo.FindOptions{
+		Sort:  bson.M{"createdAt": -1},
+		Limit: int64(limit),
+	}
+
+	cursor, err := r.collection.Find(ctx, bson.M{}, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var sessions []models.GameSession
+	if err = cursor.All(ctx, &sessions); err != nil {
+		return nil, err
+	}
+
+	// Convert to SessionAnalytics
+	var analytics []models.SessionAnalytics
+	for _, session := range sessions {
+		analytics = append(analytics, models.SessionAnalytics{
+			SessionID:   session.ID.Hex(),
+			Player1ID:   session.Player1ID.Hex(),
+			Player2ID:   session.Player2ID,
+			CreatedAt:   session.CreatedAt,
+			CompletedAt: session.CompletedAt,
+			Score:       session.CompatibilityScore,
+			IPAddress:   session.IPAddress,
+			// Note: Player names, duration, page views, and events would need to be joined from other collections
+		})
+	}
+
+	return analytics, nil
+}
+
+
+// GetAverageScore calculates the average compatibility score
+func (r *GameSessionRepositoryImpl) GetAverageScore(ctx context.Context) (float64, error) {
+	pipeline := []bson.M{
+		{"$match": bson.M{"compatibilityScore": bson.M{"$ne": nil}}},
+		{"$group": bson.M{
+			"_id": nil,
+			"avgScore": bson.M{"$avg": "$compatibilityScore"},
+		}},
+	}
+
+	cursor, err := r.collection.Aggregate(ctx, pipeline)
+	if err != nil {
+		return 0, err
+	}
+	defer cursor.Close(ctx)
+
+	var result []bson.M
+	if err = cursor.All(ctx, &result); err != nil {
+		return 0, err
+	}
+
+	if len(result) == 0 {
+		return 0, nil
+	}
+
+	if avgScore, ok := result[0]["avgScore"].(float64); ok {
+		return avgScore, nil
+	}
+
+	return 0, fmt.Errorf("unexpected result format")
+}
+
+// UpdateCompletedAt sets the completion timestamp for a session
+func (r *GameSessionRepositoryImpl) UpdateCompletedAt(ctx context.Context, id string, completedAt time.Time) error {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return fmt.Errorf("invalid session ID format: %v", err)
+	}
+
+	update := bson.M{"$set": bson.M{"completedAt": completedAt}}
+	result, err := r.collection.UpdateOne(ctx, bson.M{"_id": objectID}, update)
 	if err != nil {
 		return err
 	}

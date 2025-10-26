@@ -13,6 +13,7 @@ import (
 	"get-to-know-game-go/config"
 	"get-to-know-game-go/database"
 	"get-to-know-game-go/handlers"
+	"get-to-know-game-go/middleware"
 	"get-to-know-game-go/repositories"
 	"get-to-know-game-go/services"
 
@@ -34,6 +35,7 @@ func main() {
 	questionRepo := repositories.NewQuestionRepository(mongoDB.GetCollection("questions"))
 	playerRepo := repositories.NewPlayerRepository(mongoDB.GetCollection("players"))
 	sessionRepo := repositories.NewGameSessionRepository(mongoDB.GetCollection("sessions"))
+	trackingRepo := repositories.NewTrackingRepository(mongoDB.GetCollection("tracking"))
 
 	// Initialize services
 	compatibilityService := services.NewCompatibilityService()
@@ -50,6 +52,8 @@ func main() {
 	questionsHandler := handlers.NewQuestionsHandler(questionRepo)
 	playersHandler := handlers.NewPlayersHandler(playerRepo)
 	sessionsHandler := handlers.NewSessionsHandler(sessionRepo, playerRepo, compatibilityService)
+	trackingHandler := handlers.NewTrackingHandler(trackingRepo, cfg)
+	adminHandler := handlers.NewAdminHandler(sessionRepo, playerRepo, questionRepo, trackingRepo)
 
 	// Setup Fiber app
 	app := fiber.New()
@@ -93,7 +97,7 @@ func main() {
 		}
 		
 		c.Set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
-		c.Set("Access-Control-Allow-Headers", "Origin,Content-Type,Accept,Authorization")
+		c.Set("Access-Control-Allow-Headers", "Origin,Content-Type,Accept,Authorization,X-Admin-Key")
 		c.Set("Access-Control-Allow-Credentials", "true")
 		
 		if c.Method() == "OPTIONS" {
@@ -128,6 +132,38 @@ func main() {
 	sessions.Post("/:sessionId/join", sessionsHandler.JoinSession)
 	sessions.Put("/:sessionId/answers", sessionsHandler.SubmitAnswers)
 	sessions.Delete("/:sessionId", sessionsHandler.DeleteSession)
+
+	// Tracking routes
+	api.Post("/track", trackingHandler.Track)
+	api.Get("/pixel.gif", trackingHandler.Pixel)
+
+	// Admin routes with authentication middleware
+	admin := api.Group("/admin", middleware.AdminAuthMiddleware(cfg.AdminKey))
+	
+	// Dashboard and stats (GET - read-only data)
+	admin.Get("/stats", adminHandler.GetStats)
+	admin.Get("/stats/visitors", adminHandler.GetVisitorStats)
+	admin.Get("/sessions", adminHandler.GetSessions)
+	admin.Get("/performance", adminHandler.GetPerformanceMetrics)
+	admin.Get("/analytics/geographic", adminHandler.GetGeographicAnalytics)
+	
+	// Questions resource (full CRUD)
+	admin.Get("/questions", adminHandler.GetQuestions)
+	admin.Post("/questions", adminHandler.CreateQuestion)
+	admin.Put("/questions/:id", adminHandler.UpdateQuestion)
+	admin.Delete("/questions/:id", adminHandler.DeleteQuestion)
+	
+	// Sections resource (full CRUD)
+	admin.Get("/sections", adminHandler.GetSections)
+	admin.Post("/sections", adminHandler.CreateSection)
+	admin.Put("/sections/:oldName", adminHandler.UpdateSection)
+	admin.Delete("/sections/:name", adminHandler.DeleteSection)
+	
+	// Bulk operations (POST for complex operations)
+	admin.Post("/questions/bulk", adminHandler.BulkCreateQuestions)
+	
+	// Analytics (POST for complex queries with filters)
+	admin.Post("/analytics/filtered", adminHandler.GetFilteredAnalytics)
 	
 	log.Println("Routes registered successfully")
 
