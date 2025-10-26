@@ -11,24 +11,56 @@
     // Update current path when page changes
     $: currentPath = $page.url.pathname;
     
-    onMount(() => {
-        // Get admin key from localStorage or prompt user
+    onMount(async () => {
+        // Try to get admin key from URL params first (for testing)
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlKey = urlParams.get('admin_key');
+        
+        if (urlKey) {
+            adminKey = urlKey;
+            adminApi.setAdminKey(urlKey);
+            isAuthenticated = true;
+            // Store in localStorage for future use
+            localStorage.setItem('admin_key', urlKey);
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+            return;
+        }
+        
+        // Check localStorage
         const stored = localStorage.getItem('admin_key');
         if (stored) {
             adminKey = stored;
             adminApi.setAdminKey(stored);
-            isAuthenticated = true;
+            // Test if the key works by making a test API call
+            try {
+                await adminApi.getStats();
+                isAuthenticated = true;
+            } catch (error) {
+                // Key is invalid, clear it
+                localStorage.removeItem('admin_key');
+                adminKey = '';
+                promptForAdminKey();
+            }
         } else {
             promptForAdminKey();
         }
     });
     
-    function promptForAdminKey() {
+    async function promptForAdminKey() {
         const key = prompt('Enter admin key:') || '';
         if (key) {
             adminKey = key;
             adminApi.setAdminKey(key);
-            isAuthenticated = true;
+            // Test the key
+            try {
+                await adminApi.getStats();
+                isAuthenticated = true;
+                localStorage.setItem('admin_key', key);
+            } catch (error) {
+                alert('Invalid admin key. Please try again.');
+                promptForAdminKey();
+            }
         } else {
             // Redirect to home if no key provided
             window.location.href = '/';
@@ -60,9 +92,10 @@
     <title>Admin Dashboard - Get to Know Game</title>
 </svelte:head>
 
-<div class="admin-layout">
-    <!-- Sidebar -->
-    <aside class="sidebar" class:open={sidebarOpen}>
+        <div class="admin-layout">
+            <!-- Sidebar -->
+            {#if isAuthenticated}
+            <aside class="sidebar" class:open={sidebarOpen}>
         <div class="sidebar-header">
             <h2 class="sidebar-title">Admin Panel</h2>
             <button class="sidebar-toggle" on:click={toggleSidebar}>
@@ -90,46 +123,63 @@
             </button>
         </div>
     </aside>
+    {/if}
     
-    <!-- Main Content -->
-    <main class="main-content">
-        <!-- Header -->
-        <header class="admin-header">
-            <div class="header-left">
-                <button class="mobile-menu-btn" on:click={toggleSidebar}>
-                    ☰
-                </button>
-                <h1 class="page-title">
-                    {#if currentPath === '/admin'}
-                        Dashboard
-                    {:else if currentPath === '/admin/analytics'}
-                        Analytics
-                    {:else if currentPath === '/admin/sessions'}
-                        Sessions
-                    {:else if currentPath === '/admin/questions'}
-                        Questions
-                    {:else if currentPath === '/admin/sections'}
-                        Sections
-                    {:else if currentPath === '/admin/performance'}
-                        Performance
-                    {:else}
-                        Admin
-                    {/if}
-                </h1>
-            </div>
-            
-            <div class="header-right">
-                <div class="admin-key-display">
-                    Key: {adminKey ? adminKey.substring(0, 8) + '...' : 'Not set'}
-                </div>
-            </div>
-        </header>
-        
-        <!-- Page Content -->
-        <div class="page-content">
-            <slot />
-        </div>
-    </main>
+            <!-- Main Content -->
+            <main class="main-content">
+                {#if !isAuthenticated}
+                    <!-- Authentication Required -->
+                    <div class="auth-required">
+                        <div class="auth-card">
+                            <h2>🔐 Authentication Required</h2>
+                            <p>Please enter your admin key to access the admin panel.</p>
+                            <button class="btn btn-primary" on:click={promptForAdminKey}>
+                                Enter Admin Key
+                            </button>
+                        </div>
+                    </div>
+                {:else}
+                    <!-- Header -->
+                    <header class="admin-header">
+                        <div class="header-left">
+                            <button class="mobile-menu-btn" on:click={toggleSidebar}>
+                                ☰
+                            </button>
+                            <h1 class="page-title">
+                                {#if currentPath === '/admin'}
+                                    Dashboard
+                                {:else if currentPath === '/admin/analytics'}
+                                    Analytics
+                                {:else if currentPath === '/admin/sessions'}
+                                    Sessions
+                                {:else if currentPath === '/admin/questions'}
+                                    Questions
+                                {:else if currentPath === '/admin/sections'}
+                                    Sections
+                                {:else if currentPath === '/admin/performance'}
+                                    Performance
+                                {:else}
+                                    Admin
+                                {/if}
+                            </h1>
+                        </div>
+                        
+                        <div class="header-right">
+                            <div class="admin-key-display">
+                                Key: {adminKey ? adminKey.substring(0, 8) + '...' : 'Not set'}
+                            </div>
+                            <button class="btn btn-sm btn-outline" on:click={logout}>
+                                Logout
+                            </button>
+                        </div>
+                    </header>
+                    
+                    <!-- Page Content -->
+                    <div class="page-content">
+                        <slot />
+                    </div>
+                {/if}
+            </main>
 </div>
 
 <style>
@@ -337,5 +387,36 @@
             background-color: rgba(0, 0, 0, 0.5);
             z-index: -1;
         }
+    }
+    
+    .auth-required {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: #0f172a;
+    }
+    
+    .auth-card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 1rem;
+        padding: 3rem;
+        text-align: center;
+        max-width: 400px;
+        width: 100%;
+        margin: 2rem;
+    }
+    
+    .auth-card h2 {
+        color: #f1f5f9;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+    
+    .auth-card p {
+        color: #94a3b8;
+        margin-bottom: 2rem;
+        line-height: 1.6;
     }
 </style>

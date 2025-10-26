@@ -29,7 +29,7 @@ services:
       - "5012:5012"
     environment:
       MONGODB_URI: mongodb://admin:password@mongodb:27017/GetToKnowGame?authSource=admin
-      ADMIN_KEY: your-super-secret-admin-key-change-this
+      ADMIN_KEY: my-secure-admin-key-2024
       TRACKING_ENABLED: "true"
       PORT: "5012"
     depends_on:

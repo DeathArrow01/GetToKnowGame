@@ -41,7 +41,7 @@ class AdminApiService {
     getAuthHeaders() {
         const key = this.getAdminKey();
         if (!key) {
-            throw new Error('Admin key not set. Please authenticate first.');
+            return {};
         }
 
         return {
