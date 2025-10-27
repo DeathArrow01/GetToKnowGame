@@ -105,8 +105,13 @@
                                 {/if}
                             </td>
                             <td class="status">
-                                {@const status = getStatusBadge(session)}
-                                <span class="status-badge {status.class}">{status.text}</span>
+                                {#if session.completedAt}
+                                    <span class="status-badge completed">Completed</span>
+                                {:else if session.player2Id}
+                                    <span class="status-badge in-progress">In Progress</span>
+                                {:else}
+                                    <span class="status-badge waiting">Waiting</span>
+                                {/if}
                             </td>
                             <td class="ip-address">
                                 <span class="ip-text">{session.ipAddress}</span>

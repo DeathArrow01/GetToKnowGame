@@ -1,17 +1,35 @@
 <script>
+    import { onMount, afterUpdate } from 'svelte';
+    
     export let data = [];
     
     let mapContainer;
+    let mounted = false;
     
     // Simple geographic visualization since we don't have a map library
     // In a real implementation, you would use Leaflet, Google Maps, or similar
     
-    $: if (data && data.length > 0) {
-        createGeographicVisualization();
-    }
+    onMount(() => {
+        mounted = true;
+        // Use a small delay to ensure DOM is ready
+        setTimeout(() => {
+            if (data && data.length > 0) {
+                createGeographicVisualization();
+            }
+        }, 0);
+    });
+    
+    afterUpdate(() => {
+        if (mounted && data && data.length > 0 && mapContainer) {
+            // Use a small delay to ensure DOM is ready
+            setTimeout(() => {
+                createGeographicVisualization();
+            }, 0);
+        }
+    });
     
     function createGeographicVisualization() {
-        if (!mapContainer || !data || data.length === 0) return;
+        if (!mapContainer || !data || data.length === 0 || !mounted) return;
         
         // Create a simple geographic grid visualization
         const container = mapContainer;

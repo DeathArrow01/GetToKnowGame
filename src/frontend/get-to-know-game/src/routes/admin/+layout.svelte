@@ -25,31 +25,44 @@
                 // Key is invalid, clear it
                 localStorage.removeItem('admin_key');
                 adminKey = '';
-                promptForAdminKey();
+                adminApi.setAdminKey('');
+                // Show authentication form
             }
         } else {
-            promptForAdminKey();
+            // No stored key, show authentication form
         }
     });
     
-    async function promptForAdminKey() {
-        const key = prompt('Enter admin key:') || '';
-        if (key) {
-            adminKey = key;
-            adminApi.setAdminKey(key);
-            // Test the key
-            try {
-                await adminApi.getStats();
-                isAuthenticated = true;
-                localStorage.setItem('admin_key', key);
-            } catch (error) {
-                alert('Invalid admin key. Please try again.');
-                promptForAdminKey();
-            }
-        } else {
-            // Redirect to home if no key provided
-            window.location.href = '/';
+    let keyInput = '';
+    let isAuthenticating = false;
+    let authError = '';
+
+    async function handleKeySubmit() {
+        if (!keyInput.trim()) {
+            authError = 'Please enter an admin key';
+            return;
         }
+
+        isAuthenticating = true;
+        authError = '';
+
+        try {
+            adminKey = keyInput.trim();
+            adminApi.setAdminKey(adminKey);
+            await adminApi.getStats();
+            isAuthenticated = true;
+            localStorage.setItem('admin_key', adminKey);
+        } catch (error) {
+            authError = 'Invalid admin key. Please try again.';
+            adminKey = '';
+            keyInput = '';
+        } finally {
+            isAuthenticating = false;
+        }
+    }
+
+    function handleKeyCancel() {
+        window.location.href = '/';
     }
     
     function toggleSidebar() {
@@ -57,9 +70,11 @@
     }
     
     function logout() {
-        adminApi.setAdminKey(null);
+        adminApi.setAdminKey('');
         adminKey = '';
         isAuthenticated = false;
+        keyInput = '';
+        authError = '';
         window.location.href = '/';
     }
     
@@ -118,9 +133,48 @@
                         <div class="auth-card">
                             <h2>🔐 Authentication Required</h2>
                             <p>Please enter your admin key to access the admin panel.</p>
-                            <button class="btn btn-primary" on:click={promptForAdminKey}>
-                                Enter Admin Key
-                            </button>
+                            
+                            <form on:submit|preventDefault={handleKeySubmit} class="auth-form">
+                                <div class="form-group">
+                                    <label for="admin-key" class="form-label">Admin Key</label>
+                                    <input
+                                        id="admin-key"
+                                        type="password"
+                                        bind:value={keyInput}
+                                        placeholder="Enter your admin key"
+                                        class="form-input"
+                                        class:error={authError}
+                                        disabled={isAuthenticating}
+                                        autocomplete="current-password"
+                                    />
+                                    {#if authError}
+                                        <div class="form-error">{authError}</div>
+                                    {/if}
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-outline" 
+                                        on:click={handleKeyCancel}
+                                        disabled={isAuthenticating}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button 
+                                        type="submit" 
+                                        class="btn btn-primary" 
+                                        disabled={isAuthenticating || !keyInput.trim()}
+                                    >
+                                        {#if isAuthenticating}
+                                            <span class="loading-spinner"></span>
+                                            Authenticating...
+                                        {:else}
+                                            Authenticate
+                                        {/if}
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 {:else}
@@ -403,5 +457,99 @@
         color: #94a3b8;
         margin-bottom: 2rem;
         line-height: 1.6;
+    }
+    
+    .auth-form {
+        margin-top: 1.5rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        display: block;
+        color: #f1f5f9;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .form-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: #334155;
+        border: 1px solid #475569;
+        border-radius: 0.5rem;
+        color: #f1f5f9;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: #0ea5e9;
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+    }
+    
+    .form-input.error {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+    
+    .form-input:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    
+    .form-error {
+        color: #ef4444;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+    
+    .btn-outline {
+        background: transparent;
+        border: 1px solid #475569;
+        color: #94a3b8;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    
+    .btn-outline:hover:not(:disabled) {
+        background: #334155;
+        border-color: #64748b;
+        color: #f1f5f9;
+    }
+    
+    .btn-outline:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+    
+    .loading-spinner {
+        display: inline-block;
+        width: 1rem;
+        height: 1rem;
+        border: 2px solid transparent;
+        border-top: 2px solid currentColor;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 0.5rem;
+    }
+    
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
     }
 </style>

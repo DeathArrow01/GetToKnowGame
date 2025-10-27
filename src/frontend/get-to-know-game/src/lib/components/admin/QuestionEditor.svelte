@@ -15,21 +15,20 @@
     let error = null;
     let isEditing = false;
     
-    onMount(() => {
-        if (question) {
-            isEditing = true;
-            formData = {
-                section: question.section || '',
-                questionText: question.questionText || ''
-            };
-        } else {
-            isEditing = false;
-            formData = {
-                section: '',
-                questionText: ''
-            };
-        }
-    });
+    // Reactive statement to handle prop changes
+    $: if (question) {
+        isEditing = true;
+        formData = {
+            section: question.section || '',
+            questionText: question.questionText || ''
+        };
+    } else {
+        isEditing = false;
+        formData = {
+            section: '',
+            questionText: ''
+        };
+    }
     
     async function handleSubmit() {
         if (!formData.section.trim() || !formData.questionText.trim()) {

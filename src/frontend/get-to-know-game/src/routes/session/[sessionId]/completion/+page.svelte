@@ -26,6 +26,11 @@
         }
     });
     
+    // Also load session when sessionId changes (including when it becomes empty)
+    $: if (typeof window !== 'undefined' && sessionId !== undefined) {
+        loadSession();
+    }
+    
     async function loadSession() {
         try {
             console.log('Loading session with ID:', sessionId);
