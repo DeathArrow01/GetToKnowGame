@@ -1,0 +1,68 @@
+name: Test Admin Endpoints
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/backend/**'
+      - 'tests/**'
+      - '.github/workflows/test-admin-endpoints.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/backend/**'
+      - 'tests/**'
+      - '.github/workflows/test-admin-endpoints.yml'
+  workflow_dispatch:
+    inputs:
+      backend_url:
+        description: 'Backend URL for testing'
+        required: false
+        default: 'http://localhost:5012'
+      admin_key:
+        description: 'Admin key for testing'
+        required: false
+        default: 'my-secure-admin-key-2024'
+
+jobs:
+  test-admin-endpoints:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        go-version: [1.21, 1.22]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ matrix.go-version }}
+        cache: true
+        
+    - name: Install dependencies
+      run: |
+        cd tests
+        go mod tidy
+        go mod download
+        
+    - name: Run integration tests with isolated Docker environment
+      run: |
+        cd tests
+        chmod +x run-integration-tests.sh
+        echo "🧪 Running tests with isolated test environment (separate MongoDB + Backend)"
+        ./run-integration-tests.sh --verbose
+        
+    - name: Test Results Summary
+      if: always()
+      run: |
+        echo "## 🧪 Admin Endpoints Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Go Version:** ${{ matrix.go-version }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Backend URL:** ${{ github.event.inputs.backend_url || 'http://localhost:5012' }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Test Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Test Coverage" >> $GITHUB_STEP_SUMMARY
+        echo "Coverage report has been uploaded as an artifact." >> $GITHUB_STEP_SUMMARY
